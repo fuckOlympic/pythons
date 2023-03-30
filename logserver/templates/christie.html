@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<!-- PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Projector test Window</title>
+<LINK rel="stylesheet" type="text/css" href="static/common.css" />
+
+  <script src="static/jquery-3.3.1.js"></script>
+  <!--script src="static/jquery-ui-1.12.1.base/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="static/jquery-ui-1.12.1.base/jquery-ui.min.css"-->
+
+
+
+<style type="text/css"> 
+.class_send_set_data
+{
+	width:100%;
+/*background-color:#003C78;*/
+	background-color:#003C58;
+/*background-color:cadetBlue ;*/
+	border:0;
+	color:Silver;
+	display:flex;
+}
+.class_chiller_table{
+
+	background-color: #005279;	
+} 
+td{
+color:white;
+}
+
+</style> 
+<script type="text/javascript">
+function altRows(id){
+    if(document.getElementsByTagName){
+
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+
+        for(i = 0; i < rows.length; i++){
+            if(i % 2 == 0){
+                rows[i].className = "evenrowcolor";
+            }else{
+                rows[i].className = "oddrowcolor";
+            }
+        }
+    }
+}
+
+window.onload=function(){
+//    altRows('alternatecolor');
+}
+</script>
+
+<style type="text/css">
+select{
+    font-family: verdana,arial,sans-serif;
+    font-size:12px;
+    color:#333333;
+
+}
+table.altrowstable {
+	font-family: verdana,arial,sans-serif;
+	font-size:13px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #a9c6c9;
+	border-collapse: collapse;
+}
+table.altrowstable th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #a9c6c9;
+}
+table.altrowstable td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #a9c6c9;
+}
+.oddrowcolor{
+	background-color:#d4e3e5;
+}
+.evenrowcolor{
+	background-color:#c3dde0;
+}
+#id_linear{
+
+background: -webkit-linear-gradient(left,red,yellow,green);
+}
+</style>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+	bsShow();
+//	select_language();
+//alert("control")
+	read_chiller_status();
+//	read_or_write_flag();
+
+});
+function input_set_crch(v)
+{
+	$("#id_td_input_set_datah").html(v);
+}
+function bsShow()
+{
+  $("#BasControl").show();
+  $("#AdvControl").hide();
+}
+function adShow()
+{
+  $("#BasControl").hide();
+  $("#AdvControl").show();
+}
+function sendCMD(){}
+function sendCMD111()
+{
+	var getcmd = event.srcElement.name;
+//	alert(nam);
+	$.ajax({
+    type:'GET',
+    url:'/serial_send_cmd',
+    data:{'getcmd':getcmd},
+    //dataType:'json',
+    timeout:1000,
+    cache:false,
+    async:true,
+    beforeSend:function(){
+        document.getElementById('id_div_client').innerHTML = "Sending cmd = ";
+    },
+    success:function(data){
+    	if(data != null)
+    	{
+        	document.getElementById('id_div_client').innerHTML += data;
+	       	document.getElementById('id_div_client').innerHTML += '<br/>';
+      	}
+    },
+    error:function(msg){
+        document.getElementById('id_div_client').innerHTML = "network error or no Response";
+    }
+});
+}
+
+
+_auchCRCHi = [
+
+    0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0,
+    0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
+    0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0,
+    0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40,
+    0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1,
+    0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0, 0x80, 0x41,
+    0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1,
+    0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
+    0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0,
+    0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40,
+    0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1,
+    0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40,
+    0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0,
+    0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40,
+    0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0,
+    0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40,
+    0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0,
+    0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
+    0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0,
+    0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
+    0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0,
+    0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40,
+    0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1,
+    0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
+    0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0,
+    0x80, 0x41, 0x00, 0xC1, 0x81, 0x40
+];
+_auchCRCLo = [
+    0x00, 0xC0, 0xC1, 0x01, 0xC3, 0x03, 0x02, 0xC2, 0xC6, 0x06,
+    0x07, 0xC7, 0x05, 0xC5, 0xC4, 0x04, 0xCC, 0x0C, 0x0D, 0xCD,
+    0x0F, 0xCF, 0xCE, 0x0E, 0x0A, 0xCA, 0xCB, 0x0B, 0xC9, 0x09,
+    0x08, 0xC8, 0xD8, 0x18, 0x19, 0xD9, 0x1B, 0xDB, 0xDA, 0x1A,
+    0x1E, 0xDE, 0xDF, 0x1F, 0xDD, 0x1D, 0x1C, 0xDC, 0x14, 0xD4,
+    0xD5, 0x15, 0xD7, 0x17, 0x16, 0xD6, 0xD2, 0x12, 0x13, 0xD3,
+    0x11, 0xD1, 0xD0, 0x10, 0xF0, 0x30, 0x31, 0xF1, 0x33, 0xF3,
+    0xF2, 0x32, 0x36, 0xF6, 0xF7, 0x37, 0xF5, 0x35, 0x34, 0xF4,
+    0x3C, 0xFC, 0xFD, 0x3D, 0xFF, 0x3F, 0x3E, 0xFE, 0xFA, 0x3A,
+    0x3B, 0xFB, 0x39, 0xF9, 0xF8, 0x38, 0x28, 0xE8, 0xE9, 0x29,
+    0xEB, 0x2B, 0x2A, 0xEA, 0xEE, 0x2E, 0x2F, 0xEF, 0x2D, 0xED,
+    0xEC, 0x2C, 0xE4, 0x24, 0x25, 0xE5, 0x27, 0xE7, 0xE6, 0x26,
+    0x22, 0xE2, 0xE3, 0x23, 0xE1, 0x21, 0x20, 0xE0, 0xA0, 0x60,
+    0x61, 0xA1, 0x63, 0xA3, 0xA2, 0x62, 0x66, 0xA6, 0xA7, 0x67,
+    0xA5, 0x65, 0x64, 0xA4, 0x6C, 0xAC, 0xAD, 0x6D, 0xAF, 0x6F,
+    0x6E, 0xAE, 0xAA, 0x6A, 0x6B, 0xAB, 0x69, 0xA9, 0xA8, 0x68,
+    0x78, 0xB8, 0xB9, 0x79, 0xBB, 0x7B, 0x7A, 0xBA, 0xBE, 0x7E,
+    0x7F, 0xBF, 0x7D, 0xBD, 0xBC, 0x7C, 0xB4, 0x74, 0x75, 0xB5,
+    0x77, 0xB7, 0xB6, 0x76, 0x72, 0xB2, 0xB3, 0x73, 0xB1, 0x71,
+    0x70, 0xB0, 0x50, 0x90, 0x91, 0x51, 0x93, 0x53, 0x52, 0x92,
+    0x96, 0x56, 0x57, 0x97, 0x55, 0x95, 0x94, 0x54, 0x9C, 0x5C,
+    0x5D, 0x9D, 0x5F, 0x9F, 0x9E, 0x5E, 0x5A, 0x9A, 0x9B, 0x5B,
+    0x99, 0x59, 0x58, 0x98, 0x88, 0x48, 0x49, 0x89, 0x4B, 0x8B,
+    0x8A, 0x4A, 0x4E, 0x8E, 0x8F, 0x4F, 0x8D, 0x4D, 0x4C, 0x8C,
+    0x44, 0x84, 0x85, 0x45, 0x87, 0x47, 0x46, 0x86, 0x82, 0x42,
+    0x43, 0x83, 0x41, 0x81, 0x80, 0x40
+];
+function CRC16(buffer) 
+{
+    var crcId = 0, crc_l = 0, crc_h = 0;
+    var crcValue = 0xFFFF;
+    for (var i = 0; i < buffer.length-2; i++)
+    {
+        crc_l = crcValue & 0x00ff;//低8位
+        crc_h = crcValue >> 8;//右移8取高字节
+        crcId = crc_h ^ buffer[i];
+        crc_h = crc_l ^ _auchCRCHi[crcId];
+        crc_l = _auchCRCLo[crcId];
+        crcValue = (crc_h << 8 | crc_l);
+    }
+    return crcValue;
+}
+function toHex04X(num){//将一个数字转化成16进制字符串形式
+	return num>0x100?"0x"+num.toString(16).toUpperCase():(num<0x10?"0x000"+num.toString(16).toUpperCase():"0x00"+num.toString(16).toUpperCase());
+}
+function toHex02X(num){//将一个数字转化成16进制字符串形式
+	return num<0x10?"0x0"+num.toString(16).toUpperCase():"0x"+num.toString(16).toUpperCase();
+}
+var read_buf = new Array(8);
+var read_buf11 = new Array(11);
+
+function send_set_crc()
+{
+	var result = 0,i = 0;
+    $(".class_send_set_data").each(function(){
+        read_buf11[i++] = parseInt($(this).val());
+    });
+    var crcHL = CRC16(read_buf11);
+    var crcH = crcHL>>8 &0xFF;
+    var crcL = crcHL & 0xFF;
+    $("#id_td_send_set_crch").html(toHex02X(crcH));
+    $("#id_td_send_set_crcl").html(toHex02X(crcL));
+    read_buf11[i++] = crcH;
+    read_buf11[i++] = crcL;
+	console.log(read_buf11);
+
+}
+function get_read_cmd_crc16()
+{
+	var result = 0,i = 0;
+	$(".class_send_to_read_data").each(function(){
+    	read_buf[i++] = parseInt($(this).html()); 
+	});
+	var crcHL = CRC16(read_buf);
+	var crcH = crcHL>>8 &0xFF;
+	var crcL = crcHL&0xFF;
+	$("#id_td_send_crc16h").html(toHex02X(crcH));
+	$("#id_td_send_crc16l").html(toHex02X(crcL));
+	read_buf[i++] = crcH;
+	read_buf[i++] = crcL;
+	console.log(read_buf);
+}
+function read_chiller_status()
+{
+	$("#id_td_send_data_addr_low").html ( $("#id_sel_readbyte").val());
+	$("#id_td_read_status").html( $("#id_sel_readbyte").find("option:selected").html());
+	get_read_cmd_crc16();
+	send_read_status();
+}
+function set_data_addrL()
+{
+	$("#id_set_addrL").html( $("#id_sel_set_addrL").find("option:selected").val());
+
+}
+function read_or_write_flag()
+{
+	var flag = $("#id_sel_rd_wt").find("option:selected").val();
+	$("#id_td_send_read_flag").html( $("#id_sel_rd_wt").find("option:selected").val());
+	$("#id_td_recv_data_flag").html( $("#id_sel_rd_wt").find("option:selected").html())
+	if (flag == 0x03)
+	{
+//		$(".class_sel_set_data").hide();
+//		$(".class_sel_read_cmd").show();
+	}
+	else
+	{
+//		$(".class_sel_set_data").show();
+//		$(".class_sel_read_cmd").hide();
+	}	
+}
+function send_read_status()
+{
+
+$.ajax({
+  type: "GET",
+  url: "/chiller_status",
+  data:{'read_buf':read_buf.toString()},
+//  traditional: true,//这里设置为true
+  timeout:1000,
+  cache:false,
+  async:true,
+  beforeSend:function(){
+        document.getElementById('id_div_client').innerHTML = "Sending cmd = ";
+    },
+    success:function(data){
+        if(data != null)
+        {
+		//	for(var i=0; i<data.length; i++)
+            console.log(data)
+			var i=0;
+			{
+                $(".recv_read_data").each(function(){
+					console.log("recv_read_data");
+                   // $(this).html (toHex02X(parseInt(data[i++])));
+					$(this).html("0x"+data.substr(i,2));
+					i = i + 2;
+                });
+            }
+			var datah = parseInt($("#id_td_recv_data_h").html());
+			var datal = parseInt($("#id_td_recv_data_l").html())
+			$("#id_td_read_result_status").html(datah*256+datal);
+		//	document.getElementById('id_div_client').innerHTML += data;
+		//	document.getElementById('id_div_client').innerHTML += '<br/>';
+		}
+    },
+    error:function(msg){
+        document.getElementById('id_div_client').innerHTML = "network error or no Response";
+    }
+});
+}
+function send_set_data()
+{
+
+$.ajax({
+  type: "GET",
+  url: "/chiller_status",
+  data:{'read_buf':read_buf11.toString()},
+//  traditional: true,//这里设置为true
+  timeout:1000,
+  cache:false,
+  async:true,
+  beforeSend:function(){
+        document.getElementById('id_div_client').innerHTML = "Sending cmd = ";
+    },
+    success:function(data){
+        if(data != null)
+        {
+        //  for(var i=0; i<data.length; i++)
+            console.log(data)
+            var i=0;
+            {
+                $(".class_recv_set_data").each(function(){
+                   // $(this).html (toHex02X(parseInt(data[i++])));
+                    $(this).html("0x"+data.substr(i,2));
+                    i = i + 2;
+                });
+            }
+        }
+    },
+    error:function(msg){
+        document.getElementById('id_div_client').innerHTML = "network error or no Response";
+    }
+});
+}
+
+
+
+</script>
+</head>
+
+<body style="background-color:#000000;" >
+<div id="id_fromSkt">
+
+</div>
+<p></p>
+<div style="background-color:rgb(0,0,0);height:40px">
+<p></p>
+<img src='static/logo2.png'>
+<p></p>
+
+</div>
+    
+
+
+<script>
+function laser_control_r(e)
+{
+    $("#id_laser_r").html(e+"%");
+}
+function laser_control_g(e)
+{
+    $("#id_laser_g").html(e+"%");
+}
+
+function laser_control_b(e)
+{
+    $("#id_laser_b").html(e+"%");
+}
+
+</script>
+
+<div id=BasControl>
+	
+<DIV id="subtitle">
+ <div class="title_row1">
+	<div class="sub_title">
+     <div class="left_blank"> </div>
+     <div class="top_blank"> </div>
+  	 <a class="menu_select" href="javascript:bsShow()" target="main">
+     <h4 id="basecontrol_ml_">Basic Control</h4>    </a> 
+     <a class="menu_noselect" href="javascript:adShow()" target="main">
+     <h4 id="advancedcontrol_ml_">Chiller Control</h4>    </a> 
+	</div>
+ </div>
+	<div id="id_div_slide" value=Laser>
+	</div>
+</div>
+
+
+
+
+<div id="pjcontrol" class="tablelist">
+    <table class="list_s_2 b_btn">
+      <tbody><tr>
+        <td id="power_contorl_ml_" class="f_title">Operating hours</td>
+        <td><table class="colthree">
+            <tbody><tr>
+              <td id="ctrlPower_standby_ml_">System runs 99 hours</td>
+              <td id="ctrlPower_on_ml_" >Light on 33 hours		</td>
+            </tr>
+          </tbody></table>
+        </td><td>
+      </td></tr>
+      <tr>
+        <td class="section_break"></td>
+		<td class="section_break"></td>
+      </tr>
+
+
+<script>
+</script>
+
+
+
+<script type="text/javascript">
+function sendcmd_socket(getcmd)
+{
+//	console.log(getcmd);
+$.ajax({
+    type:'GET',
+    url:'/socket_send_cmd',
+    data:{'getcmd':getcmd},
+    //dataType:'json',
+    timeout:1000,
+    cache:false,
+    async:true,
+    beforeSend:function(){
+     //$("#id_cmd_reply").val("Socket Send cmd = ");
+    },
+    success:function(data){
+    	if(data != null){
+			$("#id_cmd_reply").html(data);
+      	}
+		else{
+			$("#id_cmd_reply").html("data==Null");
+		}
+    },
+    error:function(msg){
+		//console.log(msg);
+        $("#id_cmd_reply").html("Socket error :"+msg);
+    }
+	});
+}
+function input_command(v)
+{
+	var e = window.event;
+    if ((e.keyCode) == 13) {
+   // 	console.log(v);
+		sendcmd_socket(v)
+    }
+	if( e.key == "Enter")
+	{
+//		console.log(e.key)
+	}
+}
+function enter_to_send(e)
+{
+}
+</script>
+	<tr>
+		<td id="id_command" class="f_title">Command</td>
+		<td>
+			<table class="coltwo" width=100%>
+			<tr>
+			<td><input type="text" onkeydown="input_command($(this).val())" onfocus="" width=100% placeholder="Press Enter to send command..."></td>
+			</tr>
+            <tr>
+            <td  id="id_cmd_reply" ><input hidden type="text" id="id_cmd_reply" disabled="disabled" width=200px placeholder="Reply..."></td>
+            </tr>
+
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="section_break"></td>
+		<td class="section_break"></td>
+	</tr>
+      <tr>
+        <td id="volume_ml_" class="f_title">System Status</td>
+        <td>
+			<table id="alternatecolor" class="altrowstable" border="1" style="color:Silver">
+				<thead  class="class_chiller_table"><tr>
+					<td>temperatures1</td><td>temperatures2</td><td>temperatures3</td><td>temperatures4</td>
+				</tr></thead>
+            	<tbody><tr>
+              		<td id="id_temp1">℃</td>
+              		<td id="id_temp2"></td>
+              		<td id="id_temp3"></td>
+              		<td id="id_temp4"></td>
+            	</tr></tbody>
+				<tr>
+                    <td>voltages1</td><td>Voltages2</td><td>Voltages3</td><td>Voltages4</td>
+                </tr>
+				<tr>
+                    <td id="id_volt1">V</td>
+                    <td id="id_volt2"></td>
+                    <td id="id_volt3"></td>
+                    <td id="id_volt4"></td>
+                </tr>
+				<tr>
+                    <td>Fan1</td><td>Fan2</td><td>Fan3</td><td>Fan4</td>
+                </tr>
+				<tr>
+                    <td id="id_fan1"></td>
+                    <td id="id_fan2"></td>
+                    <td id="id_fan3"></td>
+                    <td id="id_fan4"></td>
+                </tr>
+				
+                <tr>
+                    <td>temperatures1</td><td>temperatures2</td><td>temperatures3</td><td>temperatures4</td>
+                </tr>
+                <tr>
+                    <td id="id_temp1"></td>
+                    <td id="id_temp2"></td>
+                    <td id="id_temp3"></td>
+                    <td id="id_temp4"></td>
+                </tr>
+
+                <tr>
+                    <td>Chiller temperature</td><td>Chiller set temperatures</td><td>temperatures3</td><td>temperatures4</td>
+                </tr>
+                <tr>
+                    <td id="id_chil1"></td>
+                    <td id="id_chil2"></td>
+                    <td id="id_chil3"></td>
+                    <td id="id_chil4"></td>
+                </tr>
+
+			</table></td>
+      </tr>
+      <tr>
+        <td class="section_break"></td>
+		<td class="section_break"></td>
+      </tr>
+      <tr>
+        <td id="image_mode_ml_" class="f_title">Image Mode</td>
+        <td><table class="colthree">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlMode_standard_ml_" value="Standard" type="button" name="VPM:STD"></td>
+              <td><input onclick="sendCMD()" id="ctrlMode_dynamic_ml_" value="Dynamic" type="button" name="VPM:DYN"></td>
+              <td><input onclick="sendCMD()" id="ctrlMode_blackboard_ml_" value="BlackBoard" type="button" name="VPM:BBD"></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td class="f_title"></td>
+        <td><table class="colthree">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlMode_real_ml_" value="Real" type="button" name="VPM:REA"></td>
+              <td><input onclick="sendCMD()" id="ctrlMode_cinema_ml_" value="Cinema" type="button" name="VPM:CIN"></td>
+              <td><input onclick="sendCMD()" id="ctrlMode_Colorboard_ml_" value="Colorboard" type="button" name="VPM:CBD"></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td class="f_title"></td>
+        <td><table class="colthree">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlMode_image_1_ml_" value="Image1" type="button" name="VPM:IM1"></td>
+              <td><input onclick="sendCMD()" id="ctrlMode_image_2_ml_" value="Image2" type="button" name="VPM:IM2"></td>
+              <td><input onclick="sendCMD()" id="ctrlMode_image_3_ml_" value="Image3" type="button" name="VPM:IM3"></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td class="f_title"></td>
+        <td><table class="colthree">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlMode_image_4_ml_" value="Image4" type="button" name="VPM:IM4"></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td class="section_break" colspan="2"></td>
+      </tr>
+      
+	<tr>
+        <td id="input_ml_" class="f_title">Laser Power</td>
+        <td><table class="coltwo">
+            <tbody><tr>
+              <td bgcolor=red id="id_linear">R<input type="range" onclick="laser_control_r($(this).val())" id="" min="0" max="100" step="0.1"value="100" name=""></td>
+              <td id="id_laser_r">100.0%</td>
+            </tr></tbody>
+            </table>
+        </td>
+      </tr>
+     <tr>
+        <td class="f_title"></td>
+        <td><table class="coltwo">
+            <tbody><tr>
+              <td bgcolor=green>G<input type="range" onclick="laser_control_g($(this).val())" id="" min="1" max="100" value="100" name=""></td>
+              <td id="id_laser_g">100%</td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td class="f_title"></td>
+        <td><table class="coltwo">
+            <tbody><tr>
+              <td bgcolor=blue>B<input type="range" onclick="laser_control_b($(this).val())" id="" min="1" max="100" value="100" name=""></td>
+              <td id="id_laser_b">100%</td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td class="section_break" colspan="2"></td>
+      </tr>
+
+	<tr>
+        <td id="avmute_ml_" class="f_title">AV Mute</td>
+        <td><table class="colthree">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlAVMute_off_ml_" value="Off" type="button" name="OSH:0"></td>
+              <td><input onclick="sendCMD()" id="ctrlAVMute_on_ml_"  value="On"  type="button" name="OSH:1"></td>
+              <td></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td class="f_title"></td>
+        <td></td>
+      </tr>
+    </tbody></table>
+   </div>	
+</div><!--div id="BasControl"-->
+
+<div id="AdvControl">
+	
+<DIV id="subtitle">
+ <div class="title_row">
+	<div class="sub_title">
+     <div class="left_blank"> </div>
+     <div class="top_blank"> </div>
+  	 <a class="menu_noselect" href="javascript:bsShow()" target="main">
+     <h4 id="basecontrol_ml_b">Basic Control</h4>    </a> 
+     <a class="menu_select" href="javascript:adShow()" target="main">
+     <h4 id="advancedcontrol_ml_b">Chiller Control</h4>    </a> 
+	</div>
+ </div>
+</div>
+
+<div id="id_div_client">        </div>
+
+<div id="chiller_control">
+<div>
+<table id="alternatecolor" class="altrowstable" border="1" style="color:Silver">
+
+<tr>
+	<td colspan="8">read status  </td>
+</tr>
+<tr>
+    <td class="class_chiller_table" >机器地址</td>
+	<td class="class_chiller_table" >
+		<select id="id_sel_rd_wt" style="width:40px" hidden>
+			<option value=0x03>读</option>
+			<option value=0x10>写</option>
+		</select>读标志
+	</td>
+	<td class="class_chiller_table" >数据地址高位</td>
+	<td class="class_chiller_table" >数据地址低位<br/>
+		<select id="id_sel_readbyte" onChange="read_chiller_status()">
+		  <option value="0x2D" class="class_sel_read_cmd">冻水温度</option>
+		  <option value="0x2C" class="class_sel_read_cmd">环境温度</option>
+		  <option value="0x2F" class="class_sel_read_cmd">低压</option>
+		  <option value="0x30" class="class_sel_read_cmd">高压</option>
+		  <option value="0x34" class="class_sel_read_cmd">流量1(冻水流量)</option>
+		  <option value="0x35" class="class_sel_read_cmd">流量2（温水流量）</option>
+		  <option value="0x4B" class="class_sel_read_cmd">运行消息</option>
+		  <option value="0x4C" class="class_sel_read_cmd">开关机消息</option>
+		  <option value="0x4D" class="class_sel_read_cmd">故障消息</option>
+		  <option value="0x50" class="class_sel_read_cmd">相序故障</option>
+		  <option value="0x52" class="class_sel_read_cmd">液位开关</option>
+		  <option value="0x54" class="class_sel_read_cmd">高温1（冻水高温）</option>
+		  <option value="0x55" class="class_sel_read_cmd">低温1（冻水低温）</option>
+		  <option value="0x58" class="class_sel_read_cmd">高压</option>
+		  <option value="0x59" class="class_sel_read_cmd">低压</option>
+		  <option value="0x5F" class="class_sel_read_cmd">环境温度传感器</option>
+		  <option value="0x60" class="class_sel_read_cmd">温度A传感器（冻水）</option>
+		  <option value="0x62" class="class_sel_read_cmd">高压传感器</option>
+		  <option value="0x63" class="class_sel_read_cmd">低压传感器</option>
+		  <option value="0x6C" class="class_sel_read_cmd">流量1下限（冻水流量）</option>
+		  <option value="0x78" class="class_sel_read_cmd">低温停机保护</option>
+		  <option value="0x8E" >设定温度(冻水)</option>
+		  <option value="0x92" >控制温度设定最大值</option>
+		  <option value="0x93" >控制温度设定最小值</option>
+		</select> 
+	</td>
+	<td class="class_chiller_table" >数据长度高位</td>
+	<td class="class_chiller_table" >数据长度低位</td>
+	<td class="class_chiller_table" >CRC16H</td>
+	<td class="class_chiller_table" >CRC16L</td>
+
+</tr>
+<tr>
+	<td id="id_td_send_mechine_addr" class="class_send_to_read_data">	0xFE</td>
+	<td id="id_td_send_read_flag" class="class_send_to_read_data">		0x03</td>   
+	<td id="id_td_send_data_addr_high" class="class_send_to_read_data">	0x00</td>		
+	<td id="id_td_send_data_addr_low" class="class_send_to_read_data" >	0x2D<br/>
+		<input type="hidden"value=0x2D />
+	</td>
+	<td id="id_td_send_data_len_high" class="class_send_to_read_data">	0x00</td>		
+	<td id="id_td_send_data_len_low" class="class_send_to_read_data">	0x01</td>	
+	<td id="id_td_send_crc16h">CRC16H</td>
+	<td id="id_td_send_crc16l">CRC16L</td>
+	<td><button onclick="send_read_status()" style="width:100%">read</button></td>
+</tr>
+
+<tr>
+    <td class="class_chiller_table" >机器地址</td>
+	<td class="class_chiller_table" id="id_td_recv_data_flag">读</td>
+	<td class="class_chiller_table" >数据总长</td>
+	<td class="class_chiller_table" >数据1高位</td>
+	<td class="class_chiller_table" >数据1低位</td>
+	<td class="class_chiller_table" >CRC16H</td>
+	<td class="class_chiller_table" >CRC16L</td>
+	<td class="class_chiller_table" ></td>
+	<td class="class_chiller_table" id="id_td_read_status"></td>
+</tr>
+<tr>
+	<td class="recv_read_data">0xFE</td>
+	<td class="recv_read_data">0x03</td>
+	<td class="recv_read_data">0x02</td>
+	<td class="recv_read_data" id="id_td_recv_data_h">0x01</td>
+	<td class="recv_read_data" id="id_td_recv_data_l">0x00</td>
+	<td class="recv_read_data">crcH</td>
+	<td class="recv_read_data">crcL</td><td></td>
+	<td id="id_td_read_result_status"></td>
+</tr>
+
+<tr>
+	<td colspan="9">write data</td>
+</tr>
+
+  <col align="right" />
+<tbody class="class_chiller_table" >
+<tr>
+    <td>机器地址</td>
+	<td>写标志</td>
+	<td>数据地址高位</td>
+	<td>地址低位
+		
+        <!--select id="id_sel_set_addrL" onChange="set_data_addrL()">
+            <option value="0x8E" >0x8E</option>
+            <option value="0x19" >0x19</option>
+        </select-->
+
+	</td>
+	<td>数据长度高位</td>
+	<td>数据长度低位</td>
+	<td>数据总长</td>
+	<td>数据高位</td>
+	<td>数据低位</td>
+	<td>CRC16H</td>
+	<td>CRC16L</td>
+	<!--td class="class_chiller_table" td id="id_td_set_data_ok"></td-->
+
+</tr>
+</tbody>
+
+
+<tr>
+    <td><input class="class_send_set_data" value=0xFE disabled="disabled"/></td>
+    <td><input class="class_send_set_data" value=0x10 disabled="disabled"/></td>
+    <td><input class="class_send_set_data" value=0x00 disabled="disabled"/></td>
+    <td><input class="class_send_set_data" value=0x8E onkeyup="send_set_crc()" style="background-color:#003C98;width:40px"></td>
+    <td><input class="class_send_set_data" value=0x00 disabled="disabled"/></td>
+    <td><input class="class_send_set_data" value=0x01 disabled="disabled"/></td>
+    <td><input class="class_send_set_data" value=0x02 disabled="disabled"/></td>
+    <td><input class="class_send_set_data" value=0x00 onkeyup="send_set_crc()" style="background-color:#003C98;width:40px"></td>
+    <td><input class="class_send_set_data" value=0xC8 onkeyup="send_set_crc()" style="background-color:#003C98;width:40px"></td>
+    <td id="id_td_send_set_crch" >0xAA</td>
+    <td id="id_td_send_set_crcl" >0xBB</td>
+	<td><input type="button" value="write" onclick="send_set_data()"/></td>
+</tr>
+<tr>
+	<td class="class_chiller_table" >机器地址</td>
+	<td class="class_chiller_table" >写标志</td>
+	<td class="class_chiller_table" >数据地址高位</td>
+	<td class="class_chiller_table" >数据地址低位</td>
+	<td class="class_chiller_table" >数据长度高位</td>
+	<td class="class_chiller_table" >数据长度低位</td>
+	<td class="class_chiller_table" >CRC16H</td>
+	<td class="class_chiller_table" >CRC16L</td> 
+	<td></td>
+</tr>
+<tr>
+	<td class="class_recv_set_data">0xFE</td>
+	<td class="class_recv_set_data">0x10</td>
+    <td class="class_recv_set_data">0x00</td>
+    <td class="class_recv_set_data">0x8E</td>
+    <td class="class_recv_set_data">0x00</td>
+    <td class="class_recv_set_data">0x01</td>
+    <td class="class_recv_set_data">crch</td>
+    <td class="class_recv_set_data">crcl</td> <td></td> </tr> 
+
+</table>
+
+</div>
+
+
+</div><!-- id=chiller_control   -->
+
+
+
+<div id="pjcontrol" class="tablelist" hidden>
+    <table class="list_s_2 f_bg_color b_btn">
+      <tbody><tr>
+        <td id="auto_setup_ml_" class="f_title">Auto Setup</td>
+        <td><table class="colthree">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlAutosetup_ml_" value="Auto Setup" type="button" name="OAS"></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td class="section_break"></td>
+        <td class="section_break"></td>
+      </tr>
+      <tr>
+        <td id="screen_ml_" class="f_title">Screen</td>
+        <td><table class="colthree">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlScreen_normal_ml_" value="Normal" type="button" name="VS1:01"></td>
+              <td><input onclick="sendCMD()" id="ctrlScreen_full_ml_" value="Full" type="button" name="VS1:06"></td>
+              <td><input onclick="sendCMD()" id="ctrlScreen_wide_ml_" value="Wide(16:9)" type="button" name="VS1:02"></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td class="f_title"></td>
+        <td><table class="colthree">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlScreen_zoom_ml_" value="Zoom" type="button" name="VS1:40"></td>
+              <td><input onclick="sendCMD()" id="ctrlScreen_true_ml_" value="True" type="button" name="VS1:05"></td>
+              <td><input onclick="sendCMD()" id="ctrlScreen_custom_ml_" value="Custom" type="button" name="VS1:50"></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td class="section_break"></td>
+        <td class="section_break"></td>
+      </tr>
+      <tr>
+        <td id="keystone_ml_" class="f_title">KeyStone</td>
+        <td><table class="colfour">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlKeyStone_dsc_double" value="&lt;&lt;" type="button" name="OKS:-=5"></td>
+              <td><input onclick="sendCMD()" id="ctrlKeyStone_dsc" value="&lt;" type="button" name="OKS:-=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlKeyStone_inc" value="&gt;" type="button" name="OKS:+=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlKeyStone_inc_double" value="&gt;&gt;" type="button" name="OKS:+=5"></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td class="section_break"></td>
+        <td class="section_break"></td>
+      </tr>
+  	  <tr>
+        <td id="rear_ceiling_ml_" class="f_title">Rear/Ceiling</td>
+        <td><table class="colthree">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlRear_Ceiling_off_off_ml_" value="Rear:Off/Ceiling:Off" type="button" name="OIL:0"></td>
+              <td><input onclick="sendCMD()" id="ctrlRear_Ceiling_off_on_ml_" value="Rear:Off/Ceiling:On" type="button" name="OIL:2"></td>
+              <td></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td class="f_title"></td>
+        <td><table class="colthree">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlRear_Ceiling_on_off_ml_" value="Rear:On/Ceiling:Off" type="button" name="OIL:1"></td>
+              <td><input onclick="sendCMD()" id="ctrlRear_Ceiling_on_on_ml_" value="Rear:On/Ceiling:On" type="button" name="OIL:3"></td>
+              <td></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td class="section_break"></td>
+        <td class="section_break"></td>
+      </tr>
+      <tr>
+        <td id="image_adjust_ml_" class="f_title ">Image Adjust</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td id="contrast_ml_" class="f_title">Contrast</td>
+        <td><table class="colfour">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlContrast_dsc_double" value="&lt;&lt;" type="button" name="VCN:-=5"></td>
+              <td><input onclick="sendCMD()" id="ctrlContrast_dsc" value="&lt;" type="button" name="VCN:-=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlContrast_inc" value="&gt;" type="button" name="VCN:+=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlContrast_inc_double" value="&gt;&gt;" type="button" name="VCN:+=5"></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td id="brightness_ml_" class="f_title">Brightness</td>
+        <td><table class="colfour">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlBrightness_dsc_double" value="&lt;&lt;" type="button" name="VBR:-=5"></td>
+              <td><input onclick="sendCMD()" id="ctrlBrightness_dsc_" value="&lt;" type="button" name="VBR:-=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlBrightness_inc_" value="&gt;" type="button" name="VBR:+=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlBrightness_inc_double" value="&gt;&gt;" type="button" name="VBR:+=5"></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td id="color_ml_" class="f_title">Color</td>
+        <td><table class="colfour">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlColor_dsc_double" value="&lt;&lt;" type="button" name="VCO:-=5"></td>
+              <td><input onclick="sendCMD()" id="ctrlColor_dsc" value="&lt;" type="button" name="VCO:-=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlColor_inc" value="&gt;" type="button" name="VCO:+=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlColor_inc_double" value="&gt;&gt;" type="button" name="VCO:+=5"></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td id="tint_ml_" class="f_title">Tint</td>
+        <td><table class="colfour">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlTint_dsc_double" value="&lt;&lt;" type="button" name="VTN:-=5"></td>
+              <td><input onclick="sendCMD()" id="ctrlTint_dsc" value="&lt;" type="button" name="VTN:-=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlTint_inc" value="&gt;" type="button" name="VTN:+=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlTint_inc_double" value="&gt;&gt;" type="button" name="VTN:+=5"></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td id="sharpness_ml_" class="f_title">Sharpness</td>
+        <td><table class="colfour">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlSharpness_dsc_double" value="&lt;&lt;" type="button" name="VSR:-=5"></td>
+              <td><input onclick="sendCMD()" id="ctrlSharpness_dsc" value="&lt;" type="button" name="VSR:-=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlSharpness_inc" value="&gt;" type="button" name="VSR:+=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlSharpness_inc_double" value="&gt;&gt;" type="button" name="VSR:+=5"></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+    </tbody></table>
+   </div>
+
+
+</div><!--div id="AdvControl"-->
+
+
+</body>
+</html>

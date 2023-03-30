@@ -1,0 +1,2291 @@
+<!DOCTYPE html>
+<!-- PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Christie Laser Cinema</title>
+
+  <!--LINK rel="stylesheet" type="text/css" href="static/common.css" /-->
+  <!--script src="static/jquery-3.3.1.js"></script-->
+    <script src="static/jquery-1.12.4.js"></script>
+  <script src="static/christie.js"></script>
+  <script src="static/jquery-ui-1.12.1.base/jquery-ui.js"></script>
+  <script src="static/spark-md5.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="static/jquery-ui-1.12.1.base/jquery-ui.css">
+  <link rel="stylesheet" href="static/ipinput.css">
+
+
+
+<style type="text/css"> 
+#id_but_savejson{
+width:60px;
+height:30px;
+font-size:12;
+}
+.class_send_set_data
+{
+	width:100%;
+/*background-color:#003C78;*/
+/*	background-color:#003C58;*/
+	background-color:black;
+/*background-color:cadetBlue ;*/
+	border:0;
+	color:Silver;
+	display:flex;
+}
+.class_chiller_table{
+
+/*	background-color: #005279;	*/
+	background-color: #666666;	
+/*	background-color: dimgray;	*/
+} 
+td{
+color:white;
+}
+.f_title{
+width:150px;
+font-size:20px;
+background:dimgray;
+
+}
+</style> 
+<script type="text/javascript">
+function altRows(id){
+    if(document.getElementsByTagName){
+
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+
+        for(i = 0; i < rows.length; i++){
+            if(i % 2 == 0){
+                rows[i].className = "evenrowcolor";
+            }else{
+                rows[i].className = "oddrowcolor";
+            }
+        }
+    }
+}
+//获取本地IP
+function GetLocalIPAddress()
+{
+var obj = null;
+var rslt = "";
+try
+{
+obj = new ActiveXObject("rcbdyctl.Setting");
+rslt = obj.GetIPAddress;
+obj = null;
+}
+catch(e)
+{
+//alert("ErrInfoIS:"+e)
+}
+return rslt;
+}
+//document.write("你的IP是：" + GetLocalIPAddress());
+
+//window.onload=function(){
+//    altRows('alternatecolor');
+//}
+
+
+function refreshSwatch() {
+    var red = $( "#id_red" ).slider( "value" ),
+      green = $( "#id_green" ).slider( "value" ),
+      blue = $( "#id_blue" ).slider( "value" ),
+      hex = hexFromRGB( red, green, blue );
+    $( "#swatch" ).css( "background-color", "#" + hex );
+  }
+
+function hexFromRGB(r, g, b) {
+    var hex = [
+      r.toString( 16 ),
+      g.toString( 16 ),
+      b.toString( 16 )
+    ];
+    $.each( hex, function( nr, val ) {
+      if ( val.length === 1 ) {
+        hex[ nr ] = "0" + val;
+      }
+    });
+    return hex.join( "" ).toUpperCase();
+  }
+$(function() {
+
+ $( "#id_red, #id_green, #id_blue" ).slider({
+  //    orientation: "horizontal",
+      orientation: "vertical",
+      range: "min",
+      max: 100,
+//      values: [ 17, 200 ],
+      value: 27,
+      step:0.1,
+      slide: refreshSwatch,
+      change: refreshSwatch
+    });
+
+//    $( "#id_red" ).slider( "value", 100 );
+//    $( "#id_green" ).slider( "value", 40 );
+//    $( "#id_blue" ).slider( "value", 60 );
+
+  $( "#id_red"  ).on( "slide", function(){
+    $("#id_spinner_red").spinner("value",$(this).slider("value"))
+    });
+  $( "#id_green").on( "slide", function(){
+    $("#id_spinner_green").spinner("value",$(this).slider("value"))
+    });
+  $( "#id_blue" ).on( "slide", function(){
+    $("#id_spinner_blue").spinner("value",$(this).slider("value"))
+    });
+
+  $( "#id_red"  ).on( "slidestop", function(){
+    $("#id_spinner_red").spinner("value",$(this).slider("value").toFixed(2) )
+    console.log("red slider="+$(this).slider("value"));
+    rgb_percent_set("red",$(this).slider("value"));
+    });
+  $( "#id_green" ).on( "slidestop", function(){
+    $("#id_spinner_green").spinner("value",$(this).slider("value").toFixed(2) )
+    rgb_percent_set("green",$(this).slider("value"));
+    });
+  $( "#id_blue"  ).on( "slidestop", function(){
+    $("#id_spinner_blue").spinner("value",$(this).slider("value").toFixed(2) )
+    rgb_percent_set("blue",$(this).slider("value"));
+    });
+
+
+});
+
+
+</script>
+
+<style type="text/css">
+select{
+    font-family: verdana,arial,sans-serif;
+    font-size:12px;
+    color:#333333;
+
+}
+table.altrowstable {
+	font-family: verdana,arial,sans-serif;
+	font-size:13px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #a9c6c9;
+	border-collapse: collapse;
+}
+table.altrowstable th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #a9c6c9;
+}
+table.altrowstable td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #a9c6c9;
+}
+.oddrowcolor{
+	background-color:#d4e3e5;
+}
+.evenrowcolor{
+	background-color:#c3dde0;
+}
+
+
+#accordion-resizer {
+    margin: 0px;
+    padding: 10px;
+    width:  600px;
+    height: 500px;
+	background-color:black;
+  }
+
+.class_table_ss
+{
+	border:1;
+	color:red;
+	background-color:gray;
+}
+.class_td_ss
+{
+	align:right;
+}
+.class_td_fan
+{
+width:60px;
+}
+.class_td_ss_title
+{
+width:300px;
+}
+</style>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+	
+//	$("#id_local_ip").html( GetLocalIPAddress());	
+//	$("#id_tr_ip").hide();
+	var user = "{{gUsername}}";
+	if(user == "service")
+	{
+		$("#id_li_cmd").hide();
+		$("#id_table_cmd").hide();
+	}
+	else
+	{
+		$("#id_li_cmd").show();
+		$("#id_table_cmd").show();
+	}
+	$( "#tabs" ).tabs({
+		active: 0,
+		activate: function( event, ui ) {
+			var tabs_active = $( "#tabs" ).tabs( "option", "active" );
+			//console.log("tabs_act="+tabs_active);
+			if(tabs_active !=0)
+			{
+				$("#accordion").accordion( "option", "active",false );
+			}
+		}
+	});
+	$( "#tabs" ).css("background","black");
+	$("#accordion").css({"font-size":"0.8em","color":"black"});
+	
+//	read_chiller_status();
+
+var spinner = $( "#spinner" ).spinner();
+    spinner.css("width","30px");
+var spinner_red = $( "#id_spinner_red" ).spinner();
+var spinner_green = $( "#id_spinner_green" ).spinner();
+var spinner_blue = $( "#id_spinner_blue" ).spinner();
+
+	spinner_red.css("width","30px");
+	spinner_green.css("width","30px");
+	spinner_blue.css("width","30px");
+//	spinner_blue.attr("disabled",true);
+
+	loadjson();
+	about();
+    	init_md5();
+
+	accordion_init();
+	get_system_status("(SST?)");
+
+	$("#id_but_saveip").attr("disabled",true);
+	$(".class_setip").change(function(){
+    	checkIP(this);
+    	//SaveIPButtonEnable();
+  	});
+	$(".class_setip").keyup(function(){
+    	checkIP(this);
+  	});
+
+	clock();
+	$(".class_table_ss").css("color","black");
+
+var int=self.setInterval("clock()",1000);
+
+
+$("#upFileBtn").click(function () {
+var formData = new FormData($('#uploadForm')[0]);
+console.log(formData)
+//return;
+$.ajax({
+    url:"/up_file",
+    type: "POST",
+    data: formData,
+    async: false,
+    cashe: false,
+    contentType:false,
+    processData:false,
+    success:function (returndata) {
+        alert(returndata)
+　　},
+　　error: function (returndata) {
+　　　　　alert("Upload Failed！")
+　　}
+
+    })
+})
+
+
+});
+
+//click事件可以自己用jquery绑定, easyui提供了选中事件
+$('#accordion').accordion({
+    activate:function(title,index)
+    {
+        console.log('选择了第'+'(index+1)'+'个面板');
+		
+    //	var panel = $("#accordion").accordion('getPanel',index);
+	//	panel.panel({
+	//    	onLoad:function(){}
+	//	});
+    }
+});
+
+function accordion_data_refresh()
+{
+	if(accordion_active == 0)
+	{
+//		console.log("false ="+accordion_active);
+	}
+	switch(accordion_active)
+	{
+		case 4:socket_read("(FAN?)");break;
+		case 5:socket_read("(DFS?)");break;
+		case 6:socket_read("(CHL?)");break;
+		case 0:break;
+		case 1:
+		case 2:
+		case 3:
+			get_system_status("(SST?)");
+		//	console.log("default="+accordion_active);
+			break;
+		default:break;
+	}
+//	accordion_active = -1;
+}
+
+function sleep(d){
+  for(var t = Date.now();Date.now() - t <= d;);
+}
+function getMyTime()
+{
+	var myDate = new Date();//获取系统当前时间
+	var mytime = myDate.toLocaleTimeString(); //获取当前时间
+	var mydate = myDate.Format("yyyy-MM-dd hh:mm:ss") //==> 2006-07-02 08:09:04.423
+	//$("#id_p_time").html(mytime);	
+	$("#id_p_time").html(mydate);	
+}
+var h,l,hl,count=0;
+var accordion_active = 1;
+var sendingcmd_flag = false;
+function clock()
+{
+	getMyTime();
+	if(count  %3 == 0 ){
+		accordion_data_refresh();
+	}
+	if(count  %10 == 0)
+	{
+//		console.log(count+'--act:'+accordion_active);
+//		if(0<accordion_active  && accordion_active<4)
+//		get_system_status("(SST?)");
+	}
+	++count;
+}
+// 对Date的扩展，将 Date 转化为指定格式的String   
+// 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符，   
+// 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字)   
+// 例子：   
+// (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423   
+// (new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18   
+Date.prototype.Format = function(fmt)   
+{ //author: meizz   
+  var o = {   
+    "M+" : this.getMonth()+1,                 //月份   
+    "d+" : this.getDate(),                    //日   
+    "h+" : this.getHours(),                   //小时   
+    "m+" : this.getMinutes(),                 //分   
+    "s+" : this.getSeconds(),                 //秒   
+    "q+" : Math.floor((this.getMonth()+3)/3), //季度   
+    "S"  : this.getMilliseconds()             //毫秒
+  };   
+  if(/(y+)/.test(fmt))   
+    fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));   
+  for(var k in o)   
+    if(new RegExp("("+ k +")").test(fmt))   
+  fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));   
+  return fmt;   
+}  
+function input_set_crch(v)
+{
+	$("#id_td_input_set_datah").html(v);
+}
+
+function socket_read(getcmd)
+{
+	$.ajax({
+    type:'GET',
+    url:'/socket_send_cmd',
+    data:{'getcmd':getcmd},
+    //dataType:'json',
+    timeout:2000,
+    cache:false,
+    async:true,
+    beforeSend:function(){
+    },
+    success:function(data){
+        if(data.length > 10){
+			parse_readdata(data,getcmd);
+    	}
+		else{
+			$("#id_cmd_reply").html(getcmd+":"+data);
+		}
+	},
+    error:function(msg){
+		data = "Error:Server no Response!";
+        document.getElementById('id_div_client').innerHTML = data;
+		console.log("SOCKET ERR:"+msg+"cmd:"+getcmd);
+    }
+	});
+
+}
+
+function parse_readdata(data,getcmd)
+{
+	var html = "<td>#</td>";
+//alert("parse:"+data);
+    data = data.split(')');
+	if(getcmd == "(CHL?)")
+	{
+		chiller_update2(data);
+	}
+	else if(getcmd == "(FAN?)")
+	{
+		fan_updata(data);
+	}
+	else if(getcmd == "(DFS?)")
+	{
+		dfs_update(data);
+	}
+	return data;
+}
+function chiller_update2(data)
+{	
+	var html_chl='';
+	var chl_name = new Array();
+	var chl_value = new Array();
+	data.pop();
+	for(i in data)
+	{
+//chl_name[i] = data[i].slice(5,9);
+		chl_name[i] = data[i].split('"')[1];
+		chl_value[i] = data[i].split(' ')[1];
+		if(chl_name[i] == "COLD")
+		{
+//			chl_name[i] = "Water Temp.";
+//			chl_value[i]= chl_value[i] + ' ℃ ';
+		}
+		else if(chl_name[i] == "AMBI")
+		{
+//			chl_name[i] = "Ambient Temp.";
+//			chl_value[i]= chl_value[i] + ' ℃';
+		}
+		else if(chl_name[i] == "FLOW")
+		{
+//			chl_name[i] = "Water Flow";
+//			chl_value[i]= chl_value[i] + ' L/Min';
+		}
+		chl_name[i] = "<td class='class_td_ss_title'>" + chl_name[i] + "</td>";
+		chl_value[i] = "<td class=''>" + chl_value[i] + "</td>";
+		html_chl += "<tr>" +chl_name[i]+chl_value[i]+ "</tr>";
+//		console.log("chiller="+i);
+	}
+	$("#id_table_chl").html(html_chl);
+}
+
+function fan_updata(data)
+{
+	var html_fan ="<td class='class_td_fan'>FAN</td>";
+    var html_duty ="<td>DUTY</td>";
+    var html_freq ="<td>FREQ</td>";
+        for(var i in data)
+        {
+            var fan_data = data[i].split(' ');
+            if(fan_data[0].indexOf("DUTY") > -1)
+            {
+                html_fan = html_fan + "<td class='class_td_fan'>"+fan_data[1]+ "</td>";
+                html_duty = html_duty + "<td>"+ fan_data[2]+"</td>";
+            }
+            else if(fan_data[0].indexOf("FREQ") > -1)
+            {
+                html_freq = html_freq + "<td>"+ fan_data[2]+"</td>";
+            }
+        }
+	
+        html_fan = "<tr>" + html_fan + "</tr>";
+        html_duty = "<tr>" + html_duty + "</tr>";
+        html_freq = "<tr>" + html_freq + "</tr>";
+
+        html_fan = html_fan + html_duty + html_freq;
+        $("#id_table_fan").html(html_fan);
+}
+function dfs_update(data)
+{
+//alert(data)
+	var html_dfs='';
+	var dfs_name = new Array();
+	var dfs_value = new Array();
+	for(i in data)
+	{
+		if(i>2)break;
+		dfs_name[i] = "<td class='class_td_fan'>" + data[i].slice(5,9) + "</td>";
+		dfs_value[i] = "<td class='class_td_fan'>" + data[i].split(' ')[1] + "</td>";
+		html_dfs = html_dfs + "<tr>" +dfs_name[i]+dfs_value[i]+ "</tr>";
+	}
+	$("#id_table_dfs").html(html_dfs);
+}
+function chiller_read_cold_temp(getcmd) 
+{ 
+$.ajax({
+    type:'GET',
+    url:'/read_cold_temp',
+    data:{'getcmd':getcmd.toString()},
+    //dataType:'json',
+    timeout:1000,
+    cache:false,
+    async:true,
+    beforeSend:function(){
+    },
+    success:function(data){
+    	if(data != null)
+    	{
+			var temp = parseInt(data);
+			$("#id_chiller_water").val(temp/10);
+      	}
+    },
+    error:function(msg){
+        document.getElementById('id_div_client').innerHTML = "network error or no Response";
+    }
+});
+}
+
+
+function chiller_read_ambt_temp(getcmd) 
+{ 
+$.ajax({
+    type:'GET',
+    url:'/read_ambt_temp',
+    data:{'getcmd':getcmd.toString()},
+    //dataType:'json',
+    timeout:1000,
+    cache:false,
+    async:true,
+    beforeSend:function(){
+    //    document.getElementById('id_div_client').innerHTML = "Sending cmd = ";
+    },
+    success:function(data){
+    	if(data != null)
+    	{
+			var temp = parseInt(data);
+            $("#id_chiller_ambt").val(temp/10);
+            chiller_change();
+      	}
+    },
+    error:function(msg){
+        document.getElementById('id_div_client').innerHTML = "network error or no Response";
+    }
+});
+}
+function chiller_read_set_temp(getcmd)
+{
+$.ajax({
+    type:'GET',
+    url:'/read_set_temp',
+    data:{'getcmd':getcmd.toString()},
+    //dataType:'json',
+    timeout:1500,
+    cache:false,
+    async:true,
+    beforeSend:function(){
+    },
+    success:function(data){
+        if(data != null)
+        {
+            var temp = parseInt(data);
+        //    console.log("ajax:set="+temp);
+            $("#id_chiller_set").val(temp/10);
+            chiller_change();
+        }
+    },
+    error:function(msg){
+        document.getElementById('id_div_client').innerHTML = "network error or no Response";
+    }
+});
+}
+
+
+_auchCRCHi = [
+
+    0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0,
+    0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
+    0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0,
+    0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40,
+    0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1,
+    0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0, 0x80, 0x41,
+    0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1,
+    0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
+    0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0,
+    0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40,
+    0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1,
+    0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40,
+    0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0,
+    0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40,
+    0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0,
+    0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40,
+    0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0,
+    0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
+    0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0,
+    0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
+    0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0,
+    0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40,
+    0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1,
+    0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
+    0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0,
+    0x80, 0x41, 0x00, 0xC1, 0x81, 0x40
+];
+_auchCRCLo = [
+    0x00, 0xC0, 0xC1, 0x01, 0xC3, 0x03, 0x02, 0xC2, 0xC6, 0x06,
+    0x07, 0xC7, 0x05, 0xC5, 0xC4, 0x04, 0xCC, 0x0C, 0x0D, 0xCD,
+    0x0F, 0xCF, 0xCE, 0x0E, 0x0A, 0xCA, 0xCB, 0x0B, 0xC9, 0x09,
+    0x08, 0xC8, 0xD8, 0x18, 0x19, 0xD9, 0x1B, 0xDB, 0xDA, 0x1A,
+    0x1E, 0xDE, 0xDF, 0x1F, 0xDD, 0x1D, 0x1C, 0xDC, 0x14, 0xD4,
+    0xD5, 0x15, 0xD7, 0x17, 0x16, 0xD6, 0xD2, 0x12, 0x13, 0xD3,
+    0x11, 0xD1, 0xD0, 0x10, 0xF0, 0x30, 0x31, 0xF1, 0x33, 0xF3,
+    0xF2, 0x32, 0x36, 0xF6, 0xF7, 0x37, 0xF5, 0x35, 0x34, 0xF4,
+    0x3C, 0xFC, 0xFD, 0x3D, 0xFF, 0x3F, 0x3E, 0xFE, 0xFA, 0x3A,
+    0x3B, 0xFB, 0x39, 0xF9, 0xF8, 0x38, 0x28, 0xE8, 0xE9, 0x29,
+    0xEB, 0x2B, 0x2A, 0xEA, 0xEE, 0x2E, 0x2F, 0xEF, 0x2D, 0xED,
+    0xEC, 0x2C, 0xE4, 0x24, 0x25, 0xE5, 0x27, 0xE7, 0xE6, 0x26,
+    0x22, 0xE2, 0xE3, 0x23, 0xE1, 0x21, 0x20, 0xE0, 0xA0, 0x60,
+    0x61, 0xA1, 0x63, 0xA3, 0xA2, 0x62, 0x66, 0xA6, 0xA7, 0x67,
+    0xA5, 0x65, 0x64, 0xA4, 0x6C, 0xAC, 0xAD, 0x6D, 0xAF, 0x6F,
+    0x6E, 0xAE, 0xAA, 0x6A, 0x6B, 0xAB, 0x69, 0xA9, 0xA8, 0x68,
+    0x78, 0xB8, 0xB9, 0x79, 0xBB, 0x7B, 0x7A, 0xBA, 0xBE, 0x7E,
+    0x7F, 0xBF, 0x7D, 0xBD, 0xBC, 0x7C, 0xB4, 0x74, 0x75, 0xB5,
+    0x77, 0xB7, 0xB6, 0x76, 0x72, 0xB2, 0xB3, 0x73, 0xB1, 0x71,
+    0x70, 0xB0, 0x50, 0x90, 0x91, 0x51, 0x93, 0x53, 0x52, 0x92,
+    0x96, 0x56, 0x57, 0x97, 0x55, 0x95, 0x94, 0x54, 0x9C, 0x5C,
+    0x5D, 0x9D, 0x5F, 0x9F, 0x9E, 0x5E, 0x5A, 0x9A, 0x9B, 0x5B,
+    0x99, 0x59, 0x58, 0x98, 0x88, 0x48, 0x49, 0x89, 0x4B, 0x8B,
+    0x8A, 0x4A, 0x4E, 0x8E, 0x8F, 0x4F, 0x8D, 0x4D, 0x4C, 0x8C,
+    0x44, 0x84, 0x85, 0x45, 0x87, 0x47, 0x46, 0x86, 0x82, 0x42,
+    0x43, 0x83, 0x41, 0x81, 0x80, 0x40
+];
+function CRC16(buffer) 
+{
+    var crcId = 0, crc_l = 0, crc_h = 0;
+    var crcValue = 0xFFFF;
+    for (var i = 0; i < buffer.length-2; i++)
+    {
+        crc_l = crcValue & 0x00ff;//低8位
+        crc_h = crcValue >> 8;//右移8取高字节
+        crcId = crc_h ^ buffer[i];
+        crc_h = crc_l ^ _auchCRCHi[crcId];
+        crc_l = _auchCRCLo[crcId];
+        crcValue = (crc_h << 8 | crc_l);
+    }
+    return crcValue;
+}
+function toHex04X(num){//将一个数字转化成16进制字符串形式
+	return num>0x100?"0x"+num.toString(16).toUpperCase():(num<0x10?"0x000"+num.toString(16).toUpperCase():"0x00"+num.toString(16).toUpperCase());
+}
+function toHex02X(num){//将一个数字转化成16进制字符串形式
+	return num<0x10?"0x0"+num.toString(16).toUpperCase():"0x"+num.toString(16).toUpperCase();
+}
+var read_buf = new Array(8);
+var read_buf11 = new Array(11);
+
+function send_set_crc()
+{
+	var result = 0,i = 0;
+    $(".class_send_set_data").each(function(){
+        read_buf11[i++] = parseInt($(this).val());
+    });
+    var crcHL = CRC16(read_buf11);
+    var crcH = crcHL>>8 &0xFF;
+    var crcL = crcHL & 0xFF;
+    $("#id_td_send_set_crch").html(toHex02X(crcH));
+    $("#id_td_send_set_crcl").html(toHex02X(crcL));
+    read_buf11[i++] = crcH;
+    read_buf11[i++] = crcL;
+	console.log(read_buf11);
+
+}
+function get_read_cmd_crc16()
+{
+	var result = 0,i = 0;
+	$(".class_send_to_read_data").each(function(){
+    	read_buf[i++] = parseInt($(this).html()); 
+	});
+	var crcHL = CRC16(read_buf);
+	var crcH = crcHL>>8 &0xFF;
+	var crcL = crcHL&0xFF;
+	$("#id_td_send_crc16h").html(toHex02X(crcH));
+	$("#id_td_send_crc16l").html(toHex02X(crcL));
+	read_buf[i++] = crcH;
+	read_buf[i++] = crcL;
+	console.log(read_buf);
+}
+function read_chiller_status()
+{
+	$("#id_td_send_data_addr_low").html ( $("#id_sel_readbyte").val());
+	$("#id_td_read_status").html( $("#id_sel_readbyte").find("option:selected").html());
+	get_read_cmd_crc16();
+	send_read_status();
+}
+function set_data_addrL()
+{
+	$("#id_set_addrL").html( $("#id_sel_set_addrL").find("option:selected").val());
+
+}
+function read_or_write_flag()
+{
+	var flag = $("#id_sel_rd_wt").find("option:selected").val();
+	$("#id_td_send_read_flag").html( $("#id_sel_rd_wt").find("option:selected").val());
+	$("#id_td_recv_data_flag").html( $("#id_sel_rd_wt").find("option:selected").html())
+	if (flag == 0x03)
+	{
+//		$(".class_sel_set_data").hide();
+//		$(".class_sel_read_cmd").show();
+	}
+	else
+	{
+//		$(".class_sel_set_data").show();
+//		$(".class_sel_read_cmd").hide();
+	}	
+}
+function send_read_status()
+{
+
+$.ajax({
+  type: "GET",
+  url: "/chiller_status",
+  data:{'read_buf':read_buf.toString()},
+//  traditional: true,//这里设置为true
+  timeout:1000,
+  cache:false,
+  async:true,
+  beforeSend:function(){
+        document.getElementById('id_div_client').innerHTML = "Sending cmd = ";
+    },
+    success:function(data){
+        if(data != null)
+        {
+		//	for(var i=0; i<data.length; i++)
+            console.log(data)
+			var i=0;
+			{
+                $(".recv_read_data").each(function(){
+					console.log("recv_read_data");
+                   // $(this).html (toHex02X(parseInt(data[i++])));
+					$(this).html("0x"+data.substr(i,2));
+					i = i + 2;
+                });
+            }
+			var datah = parseInt($("#id_td_recv_data_h").html());
+			var datal = parseInt($("#id_td_recv_data_l").html())
+			$("#id_td_read_result_status").html(datah*256+datal);
+		//	document.getElementById('id_div_client').innerHTML += data;
+		//	document.getElementById('id_div_client').innerHTML += '<br/>';
+		}
+    },
+    error:function(msg){
+        document.getElementById('id_div_client').innerHTML = "network error or no Response";
+    }
+});
+}
+function send_set_data()
+{
+
+$.ajax({
+  type: "GET",
+  url: "/chiller_status",
+  data:{'read_buf':read_buf11.toString()},
+//  traditional: true,//这里设置为true
+  timeout:1000,
+  cache:false,
+  async:true,
+  beforeSend:function(){
+        document.getElementById('id_div_client').innerHTML = "Sending cmd = ";
+    },
+    success:function(data){
+        if(data != null)
+        {
+        //  for(var i=0; i<data.length; i++)
+            console.log(data)
+            var i=0;
+            {
+                $(".class_recv_set_data").each(function(){
+                   // $(this).html (toHex02X(parseInt(data[i++])));
+                    $(this).html("0x"+data.substr(i,2));
+                    i = i + 2;
+                });
+            }
+        }
+    },
+    error:function(msg){
+        document.getElementById('id_div_client').innerHTML = "network error or no Response";
+    }
+});
+}
+
+
+
+</script>
+
+<style>
+#id_div_welcome{
+float:	right;
+color:	white; 
+font-family: arial;
+height:	0px;
+font-size:12px;
+}
+
+.class_a
+{
+width:150px;
+}
+.class_a a:link {background-color:#B0C4DE;} /* 未访问链接 */ 
+.class_a a:visited {background-color:#22AA85;} /* 已访问链接 */ 
+.class_a a:hover {background-color:#FF704D;} /* 鼠标移动到链接上 */ 
+.class_a a:active {background-color:#FF704D;} /* 鼠标点击时
+
+</style>
+</head>
+
+<body style="background-color:black;" >
+<div style="background-color:rgb(0,0,0);height:55px;color:black">
+<p></p>
+<img src='static/logo2.png'>
+<div id="id_div_welcome">
+<p>Welcome, {{ gUsername }}!</p>
+<p id="id_p_time"></p>
+
+
+</div>
+
+</div>
+    
+
+
+<script>
+function chiller_update(data)
+{
+	$("#id_chiller_water").val(data[0]);
+	$("#id_chiller_ambt").val(data[1]);
+	$("#id_chiller_flow").val(data[2]);
+
+    $("#id_chiller_temp_water").html(data[0]+"℃");
+    $("#id_chiller_temp_ambt").html(data[1]+"℃");
+    $("#id_chiller_temp_flow").html(data[2]+"L/min");
+
+    chiller_css_color();
+}
+
+function chiller_change(e)
+{
+
+    var tw = $("#id_chiller_water").val();
+    var ta = $("#id_chiller_ambt").val();
+    var ts = $("#id_chiller_flow").val();
+
+    $("#id_chiller_temp_water").html(tw+"℃");
+    $("#id_chiller_temp_ambt").html(ta+"℃");
+    $("#id_chiller_temp_flow").html(ts+"L/min");
+	
+}
+
+function chiller_slider(e)
+{
+	var tw = $("#id_chiller_water").val();
+	var ta = $("#id_chiller_ambt").val();
+    var ts = $("#id_chiller_flow").val();
+	$("#id_chiller_temp_water").html(tw+"℃");
+	$("#id_chiller_temp_ambt").html(ta+"℃");
+    $("#id_chiller_temp_flow").html(ts+"L/min");
+	chiller_css_color();
+
+}
+
+function chiller_css_color()
+{
+	if( $("#id_chiller_water").val() > 30 )
+    {
+        $("#id_chiller_temp_water").css("background","red");
+    }
+    else
+    {
+        $("#id_chiller_temp_water").css("background","black");
+    }
+    if( $("#id_chiller_ambt").val() > 30 )
+    {
+        $("#id_chiller_temp_ambt").css("background","red");
+    }
+    else
+    {
+        $("#id_chiller_temp_ambt").css("background","black");
+    }
+    if( $("#id_chiller_flow").val() < 3 )
+    {
+        $("#id_chiller_temp_flow").css("background","red");
+    }
+    else
+    {
+        $("#id_chiller_temp_flow").css("background","black");
+    }
+
+//	console.log("change:"+tw+" "+ta+" "+ts);
+
+}
+
+function laser_control_g(e)
+{
+    $("#id_laser_g").html(e+"%");
+}
+
+function laser_control_b(e)
+{
+    $("#id_laser_b").html(e+"%");
+}
+var url_file="data.json";
+ // 会打开一个空白页下载，然后空白页消失，用户体验不好
+        function download1() {
+            window.open(url_file);
+        }
+      
+        // 直接下载，用户体验好
+        function download2() {
+            var $form = $('<form method="GET"></form>');
+            $form.attr('action', url_file);
+            $form.appendTo($('body'));
+            $form.submit();
+        }
+function download3()
+{
+	var getcmd = "OK";
+$.ajax({
+    type:'GET',
+    url:'/download',
+    data:{'getcmd':getcmd.toString()},
+    //dataType:'json',
+    timeout:3000,
+    cache:false,
+    async:true,
+    beforeSend:function(){
+    },
+    success:function(data){
+        if(data != null)
+        {   
+            console.log("ajax post:data="+data.toString());
+        }
+    },
+    error:function(msg){
+        document.getElementById('id_div_client').innerHTML = "network error or no Response";
+    }
+	});
+
+}
+
+</script>
+
+
+
+
+<div id="tabs">
+
+  <ul>
+    <li><a href="#BasControl"><span>System Status</span></a></li>
+    <li><a href="#id_tabs_LaserControl"><span>Laser Control</span></a></li>
+    <li><a href="#id_tabs_service">Service</a></li>
+    <li><a href="#id_tabs_about">About</a></li>
+    <li id="id_li_cmd"><a href="#id_tabs_command">Command</a></li>
+  </ul>
+
+<div id="id_tabs_about" style="color:red">
+	<div hidden>
+©1995-2004 Macromedia, Inc. All rights reserved.
+©2004 Microsoft Corporation. All rights reserved.
+Copyright © 2004 Adobe Systems Incorporated. All rights reserved.
+©1995-2004 Eric A. and Kathryn S. Meyer. All Rights Reserved. 
+
+--------------------- 
+	</div>
+
+<table id="id_table_about" style="align:center">
+</table>
+
+</div>
+
+<script type="text/javascript">
+function init_md5()
+{
+  uploadDisable(true);
+
+
+document.getElementById("uploadfile").addEventListener("change", function() {
+
+    var fileReader = new FileReader();
+    box = document.getElementById('box');
+    blobSlice = File.prototype.mozSlice || File.prototype.webkitSlice || File.prototype.slice;
+    file = document.getElementById("uploadfile").files[0];
+    if(file == null)
+    {
+        uploadDisable(true);
+        return;
+    }
+    var ziplist = file.name.split('.')
+    var zip = ziplist[ziplist.length-1]
+    if(zip == "zip")
+        uploadDisable(false)
+    else
+    {
+        uploadDisable(true);
+        alert("The file you chosen is not zip!");
+        return;
+    }
+
+    chunkSize = 2097152;
+        // read in chunks of 2MB
+    chunks = Math.ceil(file.size / chunkSize), currentChunk = 0, spark = new SparkMD5();
+
+
+    fileReader.onload = function(e) {
+        console.log("read chunk nr", currentChunk + 1, "of", chunks);
+        spark.appendBinary(e.target.result);
+        // append binary string
+        currentChunk++;
+
+        if (currentChunk < chunks) {
+            loadNext();
+        } else {
+            var zip_md5 = ziplist[ziplist.length-2].split('_');
+                zip_md5 = zip_md5[zip_md5.length-1];
+            var md5 = spark.end();
+            //box.innerText = 'MD5 hash:' + md5;
+            //console.info("computed hash "+ md5);
+            if(zip_md5 == md5)
+                uploadDisable(false)
+            else
+            {
+                uploadDisable(true);
+                alert("The file you chosen is incorrect!!!");
+                return;
+            }
+
+            // compute hash
+        }
+    };
+    function loadNext() {
+        var start = currentChunk * chunkSize, end = start + chunkSize >= file.size ? file.size : start + chunkSize;
+
+        fileReader.readAsBinaryString(blobSlice.call(file, start, end));
+    }
+
+    loadNext();
+  });
+  
+
+
+}
+/*
+
+*/
+
+function uploadDisable(TorF)
+{
+    document.getElementById("upFileBtn").disabled = TorF;
+    document.getElementById("id_but_reboot").disabled = TorF;
+}
+
+</script>
+<div id="id_tabs_service"> 
+<table>
+	<tr>
+		<td id="" class="f_title">LOG</td>
+		<td>
+<div class="class_a">
+			<a hidden class="class_a" href='{{ url_for('download_log', filename='static/logs/frontier.log')}}'>Open</a>
+    		<a class="class_a" href="/static/logs/frontier.log" download="">Download</a>
+</div>
+		</td>
+	</tr>
+      <tr>
+        <td class="section_break" colspan="2"></td>
+      </tr>
+      <tr>
+        <td class="section_break" colspan="2"></td>
+      </tr>
+	<tr>
+		<td class="f_title">UPDATE </td>
+		<td>
+        <div>
+            <form hidden method="post" action="/upload_update_zip" enctype="multipart/form-data">
+            <input type="file" size="10" name="update_zip" value="1.Choose File" accept="zip"/>
+            <br>
+            <input hidden type="text" value="jude" class="txt_input" name="name" style="margin-top:15px;"/>
+            <input type="submit" value="Update" class="button-new" style="margin-top:5px;width:100px"/>
+            </form>
+	<div>
+        <form id="uploadForm" enctype="multipart/form-data" >
+            <div>
+               1. <input id="uploadfile" type="file" name="file" value="" style="color:white" onchange="init_md5"><br><br>
+                  <div id="box"> </div>
+               2. <input type="button" value="Upgrade" id="upFileBtn" ><br><br>
+                <input hidden onclick="reboot()" id="id_but_reboot" value="Reboot" type="button" name="">
+            </div>
+        </form>
+	</div>
+
+        </div>
+
+		</td>
+	</tr>
+
+</table>
+</div><!--div id="id_tabs_service"--> 
+
+
+<div id="id_tabs_LaserControl"> 
+<table>
+
+      <tr>
+        <td id="image_mode_ml_" class="f_title">Laser Power
+			<select id="id_sel_laser_power" style="" onchange="LaserPowerChange(this.value)">
+            	<option value="0">default</option>
+            	<option value="1">customer1</option>
+            	<option value="2">customer2</option>
+            	<option value="0x03">customer3</option>
+        	</select>
+
+		</td>
+        <td><table class="colthree">
+	 		<tr> 
+				<td>
+					<div id="id_red"></div>
+				</td>
+				<td><div id="id_green"></div></td>
+				<td><div id="id_blue"></div></td>
+            </tr>
+			
+			<tr>
+                <td align="center"><input id="id_spinner_red" step="0.1" min=0 max=100 value=96.5 readonly>%</td>
+                <td align="center"><input id="id_spinner_green" step="0.1" min=0 max=100 value=96.5 readonly>%</td>
+                <td align="center"><input id="id_spinner_blue" step="0.1" min=0 max=100 value=96.5 readonly>%</td>
+				
+				<td><input type=button id="id_but_savejson" value="save" onclick="savejson()"/>	</td>
+            </tr>
+
+        </table></td>
+      </tr>
+      <tr>
+        <td class="section_break" colspan="2"></td>
+      </tr>
+
+</table>
+</div><!--div id="id_tabs_LaserControl"--> 
+
+<script type="text/javascript">
+//$("#id_but_savejson").button();
+function sendcmd_socket(getcmd)
+{
+  console.log(getcmd);
+$.ajax({
+    type:'GET',
+    url:'/socket_send_cmd',
+    data:{'getcmd':getcmd},
+    //dataType:'json',
+    timeout:6000,
+    cache:false,
+    async:true,
+    beforeSend:function(){
+  console.log("before");
+     //$("#id_cmd_reply").val("Socket Send cmd = ");
+    },
+    success:function(data){
+        if(data != null){
+  console.log("OK");
+            $("#id_cmd_reply").html(data);
+        }
+        else{
+  console.log("OK2");
+            $("#id_cmd_reply").html("data==Null");
+        }
+    },
+    error:function(msg){
+        console.log("err:"+msg);
+        $("#id_cmd_reply").html("Socket error :"+msg);
+    }
+    });
+}
+
+
+
+function get_system_status(getcmd)
+{
+	console.log(getcmd);
+	if(sendingcmd_flag == true){
+		return;
+	}
+$.ajax({
+    type:'GET',
+    url:'/socket_send_cmd',
+    data:{'getcmd':getcmd},
+    //dataType:'json',
+    timeout:8000,
+    cache:false,
+    async:true,
+    beforeSend:function(){
+		sendingcmd_flag = true;
+     //$("#id_cmd_reply").val("Socket Send cmd = ");
+    },
+    success:function(data){
+    	if(data.length > 1024*4 ){
+//			$("#id_cmd_reply").html(data);
+			system_status_update(data);
+      	}
+		else{
+			$("#id_cmd_reply").html("less="+data);
+		}
+		sendingcmd_flag = false;
+    },
+    error:function(msg){
+		//console.log(msg);
+        $("#id_cmd_reply").html("Socket error :"+msg);
+		sendingcmd_flag = false;
+    }
+	});
+}
+function system_status_update(all_data)
+{
+	var html;
+	var line_data = all_data.split(")");
+	console.log(line_data);
+	power_health= new Array();
+	drivers 	= new Array();
+	temperature = new Array();
+	version		= new Array();
+	for(var i=0;i<line_data.length;i++)
+	{
+		var n1 = line_data[i].indexOf('\"');
+		var n2 = line_data[i].indexOf('\"',n1+1);
+		var key = line_data[i].slice(n1+1,n2);
+		
+        var n3 = line_data[i].indexOf('\"',n2+1);
+        var n4 = line_data[i].indexOf('\"',n3+1);
+		var name = line_data[i].slice(n3+1,n4);
+		
+		var title = line_data[i].split(" ");
+		var title1 = title[0];
+		var number1= title[1];
+		var number2= title[2];
+	/*	if(number1 =="000")
+		{
+			html = html + "</div><div>"+ title1 +	"</div><div>";
+		}
+		html = html + "<p>"+number1+" "+name+"  "+key+"</p>";
+	*/
+		if(title1 == "(SST+HLTX!" || title1 == "(SST+HLT1!")
+		{
+			power_health.push("<tr  style='color:black;'><td class='class_td_ss_title'>"+name+"</td>	<td class='class_td_ss'>"+key+"</td></tr>");
+		}
+		else if(title1 == "(SST+VERS!" || title1 == "(SST+VER1!")
+        {
+            version.push("<tr><td class='class_td_ss_title'>"+name+	"</td><td class='class_td_ss'>"+key+"</td></tr>");
+        }
+        else if(name.indexOf("Bank Temp")!=-1)
+        {
+            temperature.push("<tr><td class='class_td_ss_title'>"+title1.slice(5,-1)+" " +name+"</td><td class='class_td_ss'>"+key+"</td></tr>");
+        }
+        else if(name.indexOf("Temp[")!=-1  
+				||name.indexOf("Current")!=-1
+				||name.indexOf("Voltage")!=-1)
+        {
+            drivers.push("<tr><td class='class_td_ss_title'>"+title1.slice(5,-1)+" " +name+"</td><td class='class_td_ss'>"+key+"</td></tr>");
+        }
+
+	}
+	var h='';
+	$("#id_table_health").html(power_health); 
+	$("#id_table_version").html(version);
+ 	$("#id_table_temperature").html(temperature);
+	$("#id_table_drivers").html(drivers);
+
+}
+
+function accordion_init()
+{
+	var html='';
+//	html = "<div hidden>0</div><div>01</div>";
+
+	html = html +  "<div id='id_div_version_t'>VERSION</div>"+ "<div id='id_div_version' class='class_table_ss'><table id='id_table_version'></table></div>";
+
+	html = html + "<div>POWER HEALTH</div>" + "<div id='id_div_health' class='class_table_ss'><table id='id_table_health' style='color:red'></table></div>" ;
+
+	html = html + "<div>TEMPERATURE</div>"+ "<div id='id_div_temperature' class='class_table_ss'><table id='id_table_temperature'></table></div>";
+ 
+    html = html + "<div>" + "DRIVERS"+ "</div>"+ "<div id='id_div_drivers' class='class_table_ss'><table id='id_table_drivers'></table></div>";
+
+	html = html + "<div>" + "FAN"+ "</div>"+ "<div id='id_div_fan' class='class_table_ss'><table id='id_table_fan' ></table></div>";
+	
+    html =  html + "<div>" + "DFS"+ "</div>"+ "<div id='id_div_dfs' class='class_table_ss'><table id='id_table_dfs' class='lass_table_ss'></table></div>";
+
+    html =  html + "<div>" + "CHILLER"+ "</div>"+ "<div id='id_div_chl' class='class_table_ss'><table id='id_table_chl' class='lass_table_chl'></table></div>";
+	html = html + "</table></div>" ;
+	
+	$("#accordion").html(html);
+
+
+
+
+$(function() {
+	$( "#accordion" ).accordion({
+//		header: "h3",
+		heightStyle: "fill",
+		collapsible: true,
+		active: 1,
+//		animate: "bounceslide",
+//		event: "mouseover",
+		activate: function( event, ui ) {}
+	});
+});
+	$( "#accordion" ).on( "accordionactivate", function( event, ui ) {
+		accordion_active = $("#accordion").accordion( "option", "active" );
+		console.log("accordion ="+accordion_active);
+//		accordion_data_refresh();
+	});
+
+ $(function() {
+    $( "#accordion-resizer" ).resizable({
+      minHeight: 400,
+      minWidth: 400,
+      resize: function() {
+        $( "#accordion" ).accordion("refresh");
+      }
+    });
+ });
+//$( "#accordion" ).accordion("refresh");
+
+
+}
+
+
+
+
+
+$("#id_div_version_t").click(function(){
+alert($("#id_div_version").html());
+  $("#id_div_version").html("Main Code CRC	OK CPU Temperature	28.0 CSBD Temperature	0.0");
+});
+
+function input_command(evt, t)
+{
+	var e = window.event || evt;
+    if ((e.keyCode) == 13) {
+//		console.log(v);
+		sendcmd_socket(t.value)
+    }
+	if( e.key == "Enter")
+	{
+//		console.log(e.key)
+	}
+}
+function press_enter_sendcmd(v)
+{	
+	var e = window.event;
+    if ((e.keyCode) == 13) {
+//		console.log(v);
+		sendcmd_socket(v)
+    }
+	if( e.key == "Enter")
+	{
+//		console.log(e.key)
+	}
+}
+
+
+</script>
+
+<div id="id_tabs_command" class="tablelist">
+	<table id="id_table_cmd" class="coltwo" width=100% border=1>
+	  <tr>
+		<td ><input type="text" onkeydown="input_command(event,this)" onfocus="" ondblclick="" style="width:100%" placeholder="Press Enter to send command..."></td>
+	  </tr>
+      <tr>
+        <td  id="id_cmd_reply" >Reply...<input hidden type="text" id="id_cmd_reply" disabled="disabled" width=200px placeholder="Reply..."></td>
+      </tr>
+
+	</table>
+</div><!--div id="id_tabs_command"-->
+
+<div id=BasControl>
+
+<div id="accordion-resizer" class="ui-widget-content">
+<div id="accordion">
+</div>
+</div>
+    <br/>
+<div id="" class="tablelist">
+    <table class="">
+   
+	<tr>
+		<td class=""></td>
+	</tr>
+      <tr>
+        <td id="volume_ml_" class="f_title" hidden>System Status</td>
+        <td>
+
+
+		</td>
+      </tr>
+
+
+<style>
+  #id_red, #id_green, #id_blue {
+    float: left;
+    clear: left;
+    width: 60px;
+    margin: 30px;
+  }
+  #swatch {
+    width: 120px;
+    height: 150px;
+    margin-top: 18px;
+    margin-left: 350px;
+    background-image: none;
+  }
+  #id_red .ui-slider-range { background: red/*#ef2929*/;
+
+/*background: -webkit-linear-gradient(top,red,yellow,green);*/
+ }
+  #id_red .ui-slider-handle { border-color: #ef2929;  width:67px;height:5px;}
+  #id_green .ui-slider-range { background: #8ae234; }
+  #id_green .ui-slider-handle { border-color: #8ae234;width:67px;height:5px; }
+  #id_blue .ui-slider-range { background: #729fff; }
+  #id_blue .ui-slider-handle { border-color: #729fcf; width:67px;height:5px; }
+
+#id_chiller_temp_flow,
+#id_chiller_temp_water,
+#id_chiller_temp_ambt{
+width:80px;
+
+}
+
+#id_linear{
+width: 300px;
+height:20px;
+/*background: -webkit-linear-gradient(top,white,lightblue,skyblue);*/
+background: -webkit-linear-gradient(left,mediumblue,limegreen,gold,red,maroon);
+/*margin-top:  118px;
+margin-left: 350px;
+*/
+
+}
+#id_chiller_flow,
+#id_chiller_water, 
+#id_chiller_ambt{
+width:100%;
+}
+</style>
+
+<script>
+ $(function() {
+  $("#id_spinner_red").spinner();
+  $("#id_spinner_red").on("spinstop", function(){
+	$( "#id_red" ).slider( "value", $(this).spinner('value') );
+	rgb_percent_set("red",$(this).spinner('value'));
+	console.log("id_spinner_red spinstop");
+  });
+
+  $("#id_spinner_red").on("spin", function(){
+    $( "#id_red" ).slider( "value", $(this).spinner('value') );
+  });
+//  $("#id_spinner_red").on("spinchange", function(){
+//    $( "#id_red" ).slider( "value", $(this).spinner('value') );
+//	console.log("id_spinner_red spinchange");
+//  });
+});
+
+$(function() {
+  $("#id_spinner_green").spinner();
+  $("#id_spinner_green").on("spinstop", function(){
+    $( "#id_green" ).slider( "value", $(this).spinner('value') );
+	rgb_percent_set("green",$(this).spinner('value'));
+  });
+  $("#id_spinner_green").on("spin", function(){
+    $( "#id_green" ).slider( "value", $(this).spinner('value') );
+  });
+});
+
+$(function() {
+  $("#id_spinner_blue").spinner();
+  $("#id_spinner_blue").on("spinstop", function(){
+    $( "#id_blue" ).slider( "value", $(this).spinner('value') );
+	rgb_percent_set("blue",$(this).spinner('value'));
+  });
+  $("#id_spinner_blue").on("spin", function(){
+    $( "#id_blue" ).slider( "value", $(this).spinner('value') );
+  });
+});
+
+var set_r,set_g,set_b;
+function rgb_get()
+{
+    set_r = (100*$("#id_spinner_red").spinner("value")).toFixed(0);
+    set_g = (100*$("#id_spinner_green").spinner("value")).toFixed(0);
+    set_b = (100*$("#id_spinner_blue").spinner("value")).toFixed(0);
+}
+function rgb_percent_set(color, value)
+{
+	rgb_get();
+//console.log("set_r="+set_r);
+	var rgb_cmd = "(RGB+WEBU 0 "+ set_r +" "+ set_g +" "+ set_b +")";
+	sendcmd_socket(rgb_cmd);	
+}
+
+function rgb_percent_save()
+{
+	rgb_get();
+	var rgb_cmd = "(RGB+WEBU 1 "+ set_r +" "+ set_g +" "+ set_b +")";
+	sendcmd_socket(rgb_cmd);	
+}
+var webVersion = "V1.0.0-7";
+var h = "<tr><td>SWVersion</td><td>"+ webVersion +"</td></tr>";
+function about()
+{
+console.log("about");
+    var getcmd = "-"
+  $.ajax({
+    type:'GET',
+    url:'/about',
+    data:{'getcmd':getcmd.toString()},
+    //dataType:'json',
+    timeout:1000,
+    cache:false,
+    async:true,
+    beforeSend:function(){
+    },
+    success:function(data){
+        if(data != null)
+        {
+            var aboutJson = JSON.parse(data);
+            console.log(aboutJson);
+			for(var n in aboutJson)
+			{
+				h += "<tr><td width=50%>"+ n +"</td><td>"+ aboutJson[n] +"</td></tr>";
+			}
+            $("#id_table_about").html(h);
+        }
+    },
+    error:function(msg){
+        document.getElementById('id_div_client').innerHTML = "About Json:network error or no Response";
+    }
+  });
+}
+
+var LaserPowerData;
+function loadjson()
+{
+	var getcmd = "load:"
+    $.ajax({
+    type:'GET',
+    url:'/loadjson',
+    data:{'getcmd':getcmd.toString()},
+    //dataType:'json',
+    timeout:1000,
+    cache:false,
+    async:true,
+    beforeSend:function(){
+    },
+    success:function(data){
+        if(data != null)
+        {
+			console.log(data);
+			LaserPowerData = JSON.parse(data);
+			$("#id_sel_laser_power").val(LaserPowerData.option);
+            LaserPowerload(LaserPowerData);
+        }
+    },
+    error:function(msg){
+        document.getElementById('id_div_client').innerHTML = "loadjson:network error or no Response";
+    }
+});
+
+}
+function savejson()
+{
+    LaserPowersave(LaserPowerData);
+	var getcmd = JSON.stringify(LaserPowerData);
+//	console.log(getcmd);
+//	console.log(LaserPowerData);
+    $.ajax({
+    type:'get',
+    url:'/savejson',
+    data:{ "getcmd" : getcmd },
+//    dataType:'json',
+    timeout:1000,
+    cache:false,
+    async:true,
+	contentType:"application/x-www-form-urlencoded",//默认值
+    beforeSend:function(){
+    },
+    success:function(data){
+        if(data != null)
+        {
+			rgb_percent_save();
+//            console.log(data);
+			alert("save success!");
+        }
+    },
+    error:function(msg){
+        document.getElementById('id_div_client').innerHTML = "savejson error:server no Response!";
+    }
+        });
+
+}
+var default_red=50;
+var default_green=0;
+var default_blue=0;
+function LaserPowerload(jdata)
+{
+	if(jdata.option==0)
+		$("#id_but_savejson").attr("disabled",true);
+	else 
+		$("#id_but_savejson").attr("disabled",false);
+
+	if(jdata.option==0)
+	{
+		$("#id_spinner_red").spinner("value",default_red);
+        $("#id_spinner_green").spinner("value",default_green);
+        $("#id_spinner_blue").spinner("value",default_blue);
+
+        $("#id_red").slider("value",default_red);
+        $("#id_green").slider("value",default_green);
+        $("#id_blue").slider("value",default_blue);
+
+	}
+	else if(jdata.option==1)
+	{
+
+        $("#id_spinner_red").spinner("value",jdata.custom1_red);
+        $("#id_spinner_green").spinner("value",jdata.custom1_green);
+        $("#id_spinner_blue").spinner("value",jdata.custom1_blue);
+
+        $("#id_red").slider("value",jdata.custom1_red);
+        $("#id_green").slider("value",jdata.custom1_green);
+        $("#id_blue").slider("value",jdata.custom1_blue);
+	}
+	else if(jdata.option==2)
+	{
+        $("#id_spinner_red").spinner("value",jdata.custom2_red);
+        $("#id_spinner_green").spinner("value",jdata.custom2_green);
+        $("#id_spinner_blue").spinner("value",jdata.custom2_blue);
+
+        $("#id_red").slider("value",jdata.custom2_red);
+        $("#id_green").slider("value",jdata.custom2_green);
+        $("#id_blue").slider("value",jdata.custom2_blue);
+	}
+	else if(jdata.option==3)
+	{
+        $("#id_spinner_red").spinner("value",jdata.custom3_red);
+        $("#id_spinner_green").spinner("value",jdata.custom3_green);
+        $("#id_spinner_blue").spinner("value",jdata.custom3_blue);
+
+        $("#id_red").slider("value",jdata.custom3_red);
+        $("#id_green").slider("value",jdata.custom3_green);
+        $("#id_blue").slider("value",jdata.custom3_blue);
+	}
+	rgb_percent_set(0,0);
+}
+function LaserPowersave(jdata)
+{
+
+    if(jdata.option==0)
+    {
+        jdata.default_red = default_red;//$("#id_spinner_red").spinner("value");
+        jdata.default_green = default_green;//$("#id_spinner_green").spinner("value");
+        jdata.default_blue = default_blue;//$("#id_spinner_blue").spinner("value");
+    }
+    else if(jdata.option==1)
+    {
+        jdata.custom1_red = $("#id_spinner_red").spinner("value");
+        jdata.custom1_green = $("#id_spinner_green").spinner("value");
+        jdata.custom1_blue = $("#id_spinner_blue").spinner("value");
+    }
+    else if(jdata.option==2)
+    {
+        jdata.custom2_red = $("#id_spinner_red").spinner("value");
+        jdata.custom2_green = $("#id_spinner_green").spinner("value");
+        jdata.custom2_blue = $("#id_spinner_blue").spinner("value");
+	}
+    else if(jdata.option==3)
+    {
+        jdata.custom3_red = $("#id_spinner_red").spinner("value");
+        jdata.custom3_green = $("#id_spinner_green").spinner("value");
+        jdata.custom3_blue = $("#id_spinner_blue").spinner("value");
+    }
+}
+
+function LaserPowerChange(v)
+{
+	LaserPowerData.option = v;//$(this).val();
+//	alert(LaserPowerData.option);
+	LaserPowerload(LaserPowerData);
+}
+
+function checkIP(v)
+{
+//	var v=this.value||'';
+	v.value=v.value.replace(/[^\d]/g,'');
+	v.value = v.value.substr(0,3);
+	if(v.value > 255 )
+	{
+		v.value = 255;
+	}
+	else if(v.value<0)
+	{
+		v.value = 0;
+	}
+	$(".class_setip").each(function(){
+    	if($(this).val()=='')
+		{
+        	$("#id_but_saveip").attr("disabled",true);
+//	alert($(this).attr("id"))
+			return false;
+    	}
+		else
+		{
+			$("#id_but_saveip").attr("disabled",false);
+		}
+    });
+}
+function SaveIPButtonEnable()
+{
+//  alert($('#id_inp_ip1').val())
+    if($('#id_inp_ip1').val()==''     || $('#id_inp_ip2').val()==''
+        ||$('#id_inp_ip3').val()==''  || $('#id_inp_ip4').val()==''
+        ||$('#id_inp_mask1').val()=='' || $('#id_inp_mask2').val()==''
+        ||$('#id_inp_mask3').val()=='' || $('#id_inp_mask4').val()==''
+    )
+    {
+        $("#id_but_saveip").attr("disabled",true);
+    }
+    else
+    {
+        $("#id_but_saveip").attr("disabled",false);
+    }
+}
+function saveIP()
+{
+	
+	var ip1=$('#id_inp_ip1').val();
+	var ip2=$('#id_inp_ip2').val();
+	var ip3=$('#id_inp_ip3').val();
+	var ip4=$('#id_inp_ip4').val();
+	var mask1=$('#id_inp_mask1').val();
+	var mask2=$('#id_inp_mask2').val();
+	var mask3=$('#id_inp_mask3').val();
+	var mask4=$('#id_inp_mask4').val();
+	
+	var ipaddr = ip1+'.'+ip2+'.'+ip3+'.'+ip4;
+	var subnetmask = mask1+'.'+mask2+'.'+mask3+'.'+mask4;
+//	console.log(ipaddr+','+subnetmask);
+    
+$.ajax({
+    type:'GET',
+    url:'/saveip',
+    data:{
+		'ipaddr'    :ipaddr
+	//	'subnetmask':subnetmask
+		},
+    //dataType:'json',
+    timeout:1000,
+    cache:false,
+    async:true,
+    beforeSend:function(){
+    },
+    success:function(data){
+        if(data != null)
+        {
+        //    console.log(data);
+			alert(data)
+        }
+    },
+    error:function(msg){
+        document.getElementById('id_div_client').innerHTML = "saveip:network error or no Response";
+    }
+});
+
+}
+
+function reboot()
+{
+	if(!confirm("Are you sure to reboot?"))
+	{
+		return;
+	}
+
+	var getcmd = "reboot";
+$.ajax({
+    type:'GET',
+    url:'/reboot',
+    data:{'getcmd':getcmd},
+    //dataType:'json',
+    timeout:1000,
+    cache:false,
+    async:false,
+    beforeSend:function(){
+    },
+    success:function(data){
+        if(data != null)
+        {
+        //    console.log(data);
+            alert(data)
+        }
+    },
+    error:function(msg){
+        document.getElementById('id_div_client').innerHTML = "reboot:network error or no Response";
+    }
+});
+
+}
+
+
+</script>
+
+     
+	<tr hidden>
+        <td id="input_ml_" class="f_title">Chiller
+		<input hidden type="button" value="" onclick=""> </td>
+        <td><table class="" style="" border=1  >
+			<tbody>
+			<tr>
+				<td width=150px >Cold Water </td>
+				<td id="id_linear">
+					<input id="id_chiller_water" type="range" onmousemove="chiller_slider()" onchange="chiller_change($(this).val())"  min="10" max="40" step="0.1"value="" name="" /> 
+				</td>
+              	<td id="id_chiller_temp_water">25.6℃</td>
+			</tr>
+            
+			<tr>
+	 			<td >Ambient Temp.</td> 
+				<td id="id_linear">
+					<input id="id_chiller_ambt" type="range" min="10" max="40" step="0.1"value="" name="" disabled>
+				</td>
+              	<td id="id_chiller_temp_ambt">28.7℃</td>
+            </tr>
+
+            <tr>
+                <td >Water Flow</td>
+                <td id="id_linear">
+                    <input id="id_chiller_flow" type="range" min="10" max="40" step="0.1"value="" name="" disabled>
+                </td>
+                <td id="id_chiller_temp_flow">23.4 L/min</td>
+            </tr>
+			</tbody>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td class="section_divide" style="height:0px"></td>
+		<td class="section_divide"></td>
+    </tr>
+
+	<tr hidden>
+		<td id="" class="f_title">Fan</td>
+		<td>		
+			<table id="id_table_fan_11" border=1>
+			</table>
+		</td>
+	</tr>
+    <!--tr>
+        <td class="section_divide" style="height:0px"></td>
+        <td class="section_divide"></td>
+    </tr>
+	<tr hidden>
+        <td id="" class="f_title">DFS</td>
+        <td>
+            <table id="id_table_dfs_11" border=1>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td class="section_divide" style="height:0px"></td>
+        <td class="section_divide"></td>
+    </tr-->
+
+	<tr id="id_tr_ip" hidden>
+        <td id="avmute_ml_" class="f_title">IP Address</td>
+        <td><table class="colthree">
+
+			</td></tr>
+			<tr>
+				<td>Modify IP</td>
+				<td align="">
+					<div style="color:white;border:1px solid #00;height:30px">
+<input id="id_inp_ip1" class="class_setip" type="number" style="width:45px" placeholder="192" min=0 max=255/>
+<span style="font-size:10px">●</span>
+
+<input id="id_inp_ip2" class="class_setip" type="number" style="width:45px"placeholder="168" min=0 max=255/>
+<span style="font-size:10px">●</span>
+
+<input id="id_inp_ip3"  class="class_setip" type="number" style="width:45px"placeholder="0"  min=0 max=255 />
+<span style="font-size:10px">●</span>
+
+<input id="id_inp_ip4"  class="class_setip" type="number" style="width:45px"placeholder="10"  min=0 max=255/>
+					</div>
+				</td>
+              <td><input onclick="saveIP()" id="id_but_saveip" value="save" type="button" name=""></td>
+
+			</tr>
+
+            <!--tr>
+                <td>Subnet Mask</td>
+                <td align="">
+                    <div style="color:white;border:1px solid #00;height:30px">
+<input id="id_inp_mask1" class="class_setip" type="number" style="width:45px" placeholder="255" min=0 max=255 />
+<span style="font-size:10px">●</span>
+
+<input id="id_inp_mask2"  class="class_setip" type="number" style="width:45px"placeholder="255" min=0 max=255 />
+<span style="font-size:10px">●</span>
+
+<input id="id_inp_mask3"  class="class_setip" type="number" style="width:45px"placeholder="255"  min=0 max=255/>
+<span style="font-size:10px">●</span>
+
+<input id="id_inp_mask4"  class="class_setip" type="number" style="width:45px"placeholder="0"  min=0 max=255 />
+                    </div>
+                </td>
+
+
+              <td><input onclick="saveIP()" id="id_but_saveip" value="save" type="button" name=""></td>
+            </tr-->
+
+			<tr><td></td><td></td></tr>
+			<tr><td></td><td></td></tr>
+            <tbody><tr>
+              <td></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td class="section_divide" style="height:0px"></td>
+		<td class="section_divide"></td>
+      </tr>
+      <tr>
+        <td class="ff_title"></td>
+        <td></td>
+      </tr>
+    </tbody></table>
+   </div>	
+</div><!--div id="BasControl"-->
+<div id="id_about">
+
+
+</div>
+
+
+<div id="AdvControl">
+
+<div id="id_div_client">        </div>
+
+<div hidden id="id_chiller_control">
+
+<table id="alternatecolor" class="altrowstable" border="1" style="color:Silver">
+
+<tr>
+	<td colspan="8">read status  </td>
+</tr>
+<tr>
+    <td class="class_chiller_table" >机器地址</td>
+	<td class="class_chiller_table" >
+		<select id="id_sel_rd_wt" style="width:40px" hidden>
+			<option value=0x03>读</option>
+			<option value=0x10>写</option>
+		</select>读标志
+	</td>
+	<td class="class_chiller_table" >数据地址高位</td>
+	<td class="class_chiller_table" >数据地址低位<br/>
+		<select id="id_sel_readbyte" onChange="read_chiller_status()">
+		  <option value="0x2D" class="class_sel_read_cmd">冻水温度</option>
+		  <option value="0x2C" class="class_sel_read_cmd">环境温度</option>
+		  <option value="0x2F" class="class_sel_read_cmd">低压</option>
+		  <option value="0x30" class="class_sel_read_cmd">高压</option>
+		  <option value="0x34" class="class_sel_read_cmd">流量1(冻水流量)</option>
+		  <option value="0x35" class="class_sel_read_cmd">流量2（温水流量）</option>
+		  <option value="0x4B" class="class_sel_read_cmd">运行消息</option>
+		  <option value="0x4C" class="class_sel_read_cmd">开关机消息</option>
+		  <option value="0x4D" class="class_sel_read_cmd">故障消息</option>
+		  <option value="0x50" class="class_sel_read_cmd">相序故障</option>
+		  <option value="0x52" class="class_sel_read_cmd">液位开关</option>
+		  <option value="0x54" class="class_sel_read_cmd">高温1（冻水高温）</option>
+		  <option value="0x55" class="class_sel_read_cmd">低温1（冻水低温）</option>
+		  <option value="0x58" class="class_sel_read_cmd">高压</option>
+		  <option value="0x59" class="class_sel_read_cmd">低压</option>
+		  <option value="0x5F" class="class_sel_read_cmd">环境温度传感器</option>
+		  <option value="0x60" class="class_sel_read_cmd">温度A传感器（冻水）</option>
+		  <option value="0x62" class="class_sel_read_cmd">高压传感器</option>
+		  <option value="0x63" class="class_sel_read_cmd">低压传感器</option>
+		  <option value="0x6C" class="class_sel_read_cmd">流量1下限（冻水流量）</option>
+		  <option value="0x78" class="class_sel_read_cmd">低温停机保护</option>
+		  <option value="0x8E" >设定温度(冻水)</option>
+		  <option value="0x92" >控制温度设定最大值</option>
+		  <option value="0x93" >控制温度设定最小值</option>
+		</select> 
+	</td>
+	<td class="class_chiller_table" >数据长度高位</td>
+	<td class="class_chiller_table" >数据长度低位</td>
+	<td class="class_chiller_table" >CRC16H</td>
+	<td class="class_chiller_table" >CRC16L</td>
+
+</tr>
+<tr>
+	<td id="id_td_send_mechine_addr" class="class_send_to_read_data">	0xFE</td>
+	<td id="id_td_send_read_flag" class="class_send_to_read_data">		0x03</td>   
+	<td id="id_td_send_data_addr_high" class="class_send_to_read_data">	0x00</td>		
+	<td id="id_td_send_data_addr_low" class="class_send_to_read_data" >	0x2D<br/>
+		<input type="hidden"value=0x2D />
+	</td>
+	<td id="id_td_send_data_len_high" class="class_send_to_read_data">	0x00</td>		
+	<td id="id_td_send_data_len_low" class="class_send_to_read_data">	0x01</td>	
+	<td id="id_td_send_crc16h">CRC16H</td>
+	<td id="id_td_send_crc16l">CRC16L</td>
+	<td><button onclick="send_read_status()" style="width:100%">read</button></td>
+</tr>
+
+<tr>
+    <td class="class_chiller_table" >机器地址</td>
+	<td class="class_chiller_table" id="id_td_recv_data_flag">读</td>
+	<td class="class_chiller_table" >数据总长</td>
+	<td class="class_chiller_table" >数据1高位</td>
+	<td class="class_chiller_table" >数据1低位</td>
+	<td class="class_chiller_table" >CRC16H</td>
+	<td class="class_chiller_table" >CRC16L</td>
+	<td class="class_chiller_table" ></td>
+	<td class="class_chiller_table" id="id_td_read_status"></td>
+</tr>
+<tr>
+	<td class="recv_read_data">0xFE</td>
+	<td class="recv_read_data">0x03</td>
+	<td class="recv_read_data">0x02</td>
+	<td class="recv_read_data" id="id_td_recv_data_h">0x01</td>
+	<td class="recv_read_data" id="id_td_recv_data_l">0x00</td>
+	<td class="recv_read_data">crcH</td>
+	<td class="recv_read_data">crcL</td><td></td>
+	<td id="id_td_read_result_status"></td>
+</tr>
+
+<tr>
+	<td colspan="9">write data</td>
+</tr>
+
+  <col align="right" />
+<tbody class="class_chiller_table" >
+<tr>
+    <td>机器地址</td>
+	<td>写标志</td>
+	<td>数据地址高位</td>
+	<td>地址低位
+		
+        <!--select id="id_sel_set_addrL" onChange="set_data_addrL()">
+            <option value="0x8E" >0x8E</option>
+            <option value="0x19" >0x19</option>
+        </select-->
+
+	</td>
+	<td>数据长度高位</td>
+	<td>数据长度低位</td>
+	<td>数据总长</td>
+	<td>数据高位</td>
+	<td>数据低位</td>
+	<td>CRC16H</td>
+	<td>CRC16L</td>
+	<!--td class="class_chiller_table" td id="id_td_set_data_ok"></td-->
+
+</tr>
+</tbody>
+
+
+<tr>
+    <td><input class="class_send_set_data" value=0xFE disabled="disabled"/></td>
+    <td><input class="class_send_set_data" value=0x10 disabled="disabled"/></td>
+    <td><input class="class_send_set_data" value=0x00 disabled="disabled"/></td>
+    <td><input class="class_send_set_data" value=0x8E onkeyup="send_set_crc()" style="background-color:#222222;width:40px"></td>
+    <td><input class="class_send_set_data" value=0x00 disabled="disabled"/></td>
+    <td><input class="class_send_set_data" value=0x01 disabled="disabled"/></td>
+    <td><input class="class_send_set_data" value=0x02 disabled="disabled"/></td>
+    <td><input class="class_send_set_data" value=0x00 onkeyup="send_set_crc()" style="background-color:#222222;width:40px"></td>
+    <td><input class="class_send_set_data" value=0xC8 onkeyup="send_set_crc()" style="background-color:#333333;width:40px"></td>
+    <td id="id_td_send_set_crch" >0xAA</td>
+    <td id="id_td_send_set_crcl" >0xBB</td>
+	<td><input type="button" value="write" onclick="send_set_data()"/></td>
+</tr>
+<tr>
+	<td class="class_chiller_table" >机器地址</td>
+	<td class="class_chiller_table" >写标志</td>
+	<td class="class_chiller_table" >数据地址高位</td>
+	<td class="class_chiller_table" >数据地址低位</td>
+	<td class="class_chiller_table" >数据长度高位</td>
+	<td class="class_chiller_table" >数据长度低位</td>
+	<td class="class_chiller_table" >CRC16H</td>
+	<td class="class_chiller_table" >CRC16L</td> 
+	<td></td>
+</tr>
+<tr>
+	<td class="class_recv_set_data">0xFE</td>
+	<td class="class_recv_set_data">0x10</td>
+    <td class="class_recv_set_data">0x00</td>
+    <td class="class_recv_set_data">0x8E</td>
+    <td class="class_recv_set_data">0x00</td>
+    <td class="class_recv_set_data">0x01</td>
+    <td class="class_recv_set_data">crch</td>
+    <td class="class_recv_set_data">crcl</td> <td></td> </tr> 
+
+</table>
+
+
+
+</div><!-- id=id_chiller_control   -->
+
+
+
+<div id="pjcontrol" class="tablelist" hidden>
+    <table class="list_s_2 f_bg_color b_btn">
+      <tbody><tr>
+        <td id="auto_setup_ml_" class="f_title">Auto Setup</td>
+        <td><table class="colthree">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlAutosetup_ml_" value="Auto Setup" type="button" name="OAS"></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td class="section_break"></td>
+        <td class="section_break"></td>
+      </tr>
+      <tr>
+        <td id="screen_ml_" class="f_title">Screen</td>
+        <td><table class="colthree">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlScreen_normal_ml_" value="Normal" type="button" name="VS1:01"></td>
+              <td><input onclick="sendCMD()" id="ctrlScreen_full_ml_" value="Full" type="button" name="VS1:06"></td>
+              <td><input onclick="sendCMD()" id="ctrlScreen_wide_ml_" value="Wide(16:9)" type="button" name="VS1:02"></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td class="f_title"></td>
+        <td><table class="colthree">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlScreen_zoom_ml_" value="Zoom" type="button" name="VS1:40"></td>
+              <td><input onclick="sendCMD()" id="ctrlScreen_true_ml_" value="True" type="button" name="VS1:05"></td>
+              <td><input onclick="sendCMD()" id="ctrlScreen_custom_ml_" value="Custom" type="button" name="VS1:50"></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td class="section_break"></td>
+        <td class="section_break"></td>
+      </tr>
+      <tr>
+        <td id="keystone_ml_" class="f_title">KeyStone</td>
+        <td><table class="colfour">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlKeyStone_dsc_double" value="&lt;&lt;" type="button" name="OKS:-=5"></td>
+              <td><input onclick="sendCMD()" id="ctrlKeyStone_dsc" value="&lt;" type="button" name="OKS:-=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlKeyStone_inc" value="&gt;" type="button" name="OKS:+=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlKeyStone_inc_double" value="&gt;&gt;" type="button" name="OKS:+=5"></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td class="section_break"></td>
+        <td class="section_break"></td>
+      </tr>
+  	  <tr>
+        <td id="rear_ceiling_ml_" class="f_title">Rear/Ceiling</td>
+        <td><table class="colthree">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlRear_Ceiling_off_off_ml_" value="Rear:Off/Ceiling:Off" type="button" name="OIL:0"></td>
+              <td><input onclick="sendCMD()" id="ctrlRear_Ceiling_off_on_ml_" value="Rear:Off/Ceiling:On" type="button" name="OIL:2"></td>
+              <td></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td class="f_title"></td>
+        <td><table class="colthree">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlRear_Ceiling_on_off_ml_" value="Rear:On/Ceiling:Off" type="button" name="OIL:1"></td>
+              <td><input onclick="sendCMD()" id="ctrlRear_Ceiling_on_on_ml_" value="Rear:On/Ceiling:On" type="button" name="OIL:3"></td>
+              <td></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td class="section_break"></td>
+        <td class="section_break"></td>
+      </tr>
+      <tr>
+        <td id="image_adjust_ml_" class="f_title ">Image Adjust</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td id="contrast_ml_" class="f_title">Contrast</td>
+        <td><table class="colfour">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlContrast_dsc_double" value="&lt;&lt;" type="button" name="VCN:-=5"></td>
+              <td><input onclick="sendCMD()" id="ctrlContrast_dsc" value="&lt;" type="button" name="VCN:-=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlContrast_inc" value="&gt;" type="button" name="VCN:+=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlContrast_inc_double" value="&gt;&gt;" type="button" name="VCN:+=5"></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td id="brightness_ml_" class="f_title">Brightness</td>
+        <td><table class="colfour">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlBrightness_dsc_double" value="&lt;&lt;" type="button" name="VBR:-=5"></td>
+              <td><input onclick="sendCMD()" id="ctrlBrightness_dsc_" value="&lt;" type="button" name="VBR:-=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlBrightness_inc_" value="&gt;" type="button" name="VBR:+=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlBrightness_inc_double" value="&gt;&gt;" type="button" name="VBR:+=5"></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td id="color_ml_" class="f_title">Color</td>
+        <td><table class="colfour">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlColor_dsc_double" value="&lt;&lt;" type="button" name="VCO:-=5"></td>
+              <td><input onclick="sendCMD()" id="ctrlColor_dsc" value="&lt;" type="button" name="VCO:-=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlColor_inc" value="&gt;" type="button" name="VCO:+=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlColor_inc_double" value="&gt;&gt;" type="button" name="VCO:+=5"></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td id="tint_ml_" class="f_title">Tint</td>
+        <td><table class="colfour">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlTint_dsc_double" value="&lt;&lt;" type="button" name="VTN:-=5"></td>
+              <td><input onclick="sendCMD()" id="ctrlTint_dsc" value="&lt;" type="button" name="VTN:-=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlTint_inc" value="&gt;" type="button" name="VTN:+=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlTint_inc_double" value="&gt;&gt;" type="button" name="VTN:+=5"></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+      <tr>
+        <td id="sharpness_ml_" class="f_title">Sharpness</td>
+        <td><table class="colfour">
+            <tbody><tr>
+              <td><input onclick="sendCMD()" id="ctrlSharpness_dsc_double" value="&lt;&lt;" type="button" name="VSR:-=5"></td>
+              <td><input onclick="sendCMD()" id="ctrlSharpness_dsc" value="&lt;" type="button" name="VSR:-=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlSharpness_inc" value="&gt;" type="button" name="VSR:+=1"></td>
+              <td><input onclick="sendCMD()" id="ctrlSharpness_inc_double" value="&gt;&gt;" type="button" name="VSR:+=5"></td>
+            </tr>
+          </tbody></table></td>
+      </tr>
+    </tbody></table>
+   </div>
+
+
+</div><!--div id="AdvControl"-->
+</div><!--div id="tabs"-->
+
+</body>
+</html>

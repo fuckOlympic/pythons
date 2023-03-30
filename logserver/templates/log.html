@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<!-- PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Christie Laser Cinema</title>
+
+  <!--LINK rel="stylesheet" type="text/css" href="static/common.css" /-->
+  <script src="static/jquery-3.3.1.js"></script>
+  <script src="static/jquery-ui-1.12.1.base/jquery-ui.js"></script>
+  <script src="static/spark-md5.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="static/jquery-ui-1.12.1.base/jquery-ui.css">
+  <link rel="stylesheet" href="static/ipinput.css">
+
+
+
+<style type="text/css"> 
+#id_but_savejson{
+width:60px;
+height:30px;
+font-size:12;
+}
+.class_send_set_data
+{
+	width:100%;
+/*background-color:#003C78;*/
+/*	background-color:#003C58;*/
+	background-color:black;
+/*background-color:cadetBlue ;*/
+	border:0;
+	color:Silver;
+	display:flex;
+}
+.class_chiller_table{
+
+/*	background-color: #005279;	*/
+	background-color: #666666;	
+/*	background-color: dimgray;	*/
+} 
+td{
+color:white;
+}
+.f_title{
+width:150px;
+font-size:20px;
+background:dimgray;
+
+}
+</style> 
+
+
+<style type="text/css">
+select{
+    font-family: verdana,arial,sans-serif;
+    font-size:12px;
+    color:#333333;
+
+}
+table.altrowstable {
+	font-family: verdana,arial,sans-serif;
+	font-size:13px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #a9c6c9;
+	border-collapse: collapse;
+}
+table.altrowstable th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #a9c6c9;
+}
+table.altrowstable td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #a9c6c9;
+}
+.oddrowcolor{
+	background-color:#d4e3e5;
+}
+.evenrowcolor{
+	background-color:#c3dde0;
+}
+
+
+#accordion-resizer {
+    margin: 0px;
+    padding: 10px;
+    width:  600px;
+    height: 500px;
+	background-color:black;
+  }
+
+.class_table_ss
+{
+	border:1;
+	color:red;
+	background-color:gray;
+}
+.class_td_ss
+{
+	align:right;
+}
+.class_td_fan
+{
+width:60px;
+}
+.class_td_ss_title
+{
+width:300px;
+}
+body{
+    display : none;
+}
+</style>
+
+
+<script type="text/javascript">
+document.onreadystatechange = function () {
+    if (document.readyState == "complete") {
+        document.body.style.display = "block";
+//        alert("body block")
+    } else {
+        document.body.style.display = "none";
+//        alert("body none")
+    };
+};
+
+
+
+window.onload = function(){
+//alert("onload");
+};
+
+$(document).ready(function(){
+	
+
+	var user = "{{gUsername}}";
+	if(user == "service")
+	{
+		$("#id_li_cmd").hide();
+		$("#id_table_cmd").hide();
+	}
+	else
+	{
+		$("#id_li_cmd").show();
+		$("#id_table_cmd").show();
+	}
+	$( "#tabs" ).tabs({
+		active: 0,
+		activate: function( event, ui ) {
+			var tabs_active = $( "#tabs" ).tabs( "option", "active" );
+			//console.log("tabs_act="+tabs_active);
+			if(tabs_active !=0)
+			{
+				$("#accordion").accordion( "option", "active",false );
+			}
+		},
+	});
+	$( "#tabs" ).css("background","black");
+	$("#accordion").css({"font-size":"0.8em","color":"black"});
+
+
+	clock();
+	$(".class_table_ss").css("color","black");
+
+var int=self.setInterval("clock()",1000);
+
+
+$("#UploadLog").click(function () {
+var formData = new FormData($('#uploadForm')[0]);
+//alert(formData)
+$.ajax({
+    url:"/upload_log",
+    type: "POST",
+    data: formData,
+    async: false,
+    cashe: false,
+    contentType:false,
+    processData:false,
+    success:function (returndata) {
+        //alert(returndata)
+        if(returndata.indexOf("succe")!=-1)
+        {
+            $('#id_div_client').html("upload_log:"+returndata);
+        }
+　　},
+　　error: function (returndata) {
+　　　　alert("Upload error:socket no response!")
+        document.getElementById('id_div_client').innerHTML = "up_file:error ";
+　　}
+
+    })
+})
+$("#upFileBtn").click(function () {
+var formData = new FormData($('#uploadForm')[0]);
+console.log(formData)
+$.ajax({
+    url:"/up_file",
+    type: "POST",
+    data: formData,
+    async: false,
+    cashe: false,
+    contentType:false,
+    processData:false,
+    success:function (returndata) {
+        alert(returndata)
+        if(returndata.indexOf("succe")!=-1)
+        {
+            reboot()
+            $('#id_div_client').html("up_file OK:rebooting "+returndata);
+        }
+　　},
+　　error: function (returndata) {
+　　　　alert("Upload error:socket no response!")
+        document.getElementById('id_div_client').innerHTML = "up_file:error ";
+　　}
+
+    })
+})
+
+});
+
+
+function sleep(d){
+  for(var t = Date.now();Date.now() - t <= d;);
+}
+function getMyTime()
+{
+	var myDate = new Date();//获取系统当前时间
+	var mytime = myDate.toLocaleTimeString(); //获取当前时间
+	var mydate = myDate.Format("yyyy-MM-dd hh:mm:ss") //==> 2006-07-02 08:09:04.423
+	//$("#id_p_time").html(mytime);	
+	$("#id_p_time").html(mydate);	
+}
+var h,l,hl,count=0;
+var accordion_active = 1;
+var sendingcmd_flag = false;
+function clock()
+{
+	getMyTime();
+	if(count  %3 == 0 ){
+	//	accordion_data_refresh();
+	}
+	if(count  %10 == 0)
+	{
+//		console.log(count+'--act:'+accordion_active);
+//		if(0<accordion_active  && accordion_active<4)
+//		get_system_status("(SST?)");
+	}
+	++count;
+}
+// 对Date的扩展，将 Date 转化为指定格式的String   
+// 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符，   
+// 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字)   
+// 例子：   
+// (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423   
+// (new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18   
+Date.prototype.Format = function(fmt)   
+{ //author: meizz   
+  var o = {   
+    "M+" : this.getMonth()+1,                 //月份   
+    "d+" : this.getDate(),                    //日   
+    "h+" : this.getHours(),                   //小时   
+    "m+" : this.getMinutes(),                 //分   
+    "s+" : this.getSeconds(),                 //秒   
+    "q+" : Math.floor((this.getMonth()+3)/3), //季度   
+//    "S"  : this.getMilliseconds()             //毫秒   
+  };   
+  if(/(y+)/.test(fmt))   
+    fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));   
+  for(var k in o)   
+    if(new RegExp("("+ k +")").test(fmt))   
+  fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));   
+  return fmt;   
+}  
+
+function socket_read(getcmd)
+{
+	$.ajax({
+    type:'GET',
+    url:'/socket_send_cmd',
+    data:{'getcmd':getcmd},
+    //dataType:'json',
+    timeout:2000,
+    cache:false,
+    async:true,
+    beforeSend:function(){
+    },
+    success:function(data){
+        if(data.length > 10){
+			parse_readdata(data,getcmd);
+    	}
+		else{
+			$("#id_cmd_reply").html(getcmd+":"+data);
+		}
+	},
+    error:function(msg){
+		data = "Error:Server no Response!";
+        document.getElementById('id_div_client').innerHTML = data;
+		console.log("SOCKET ERR:"+msg+"cmd:"+getcmd);
+    }
+	});
+
+}
+
+
+
+
+</script>
+
+<style>
+#id_div_welcome{
+float:	right;
+color:	white; 
+font-family: arial;
+height:	0px;
+font-size:12px;
+}
+
+.class_a
+{
+width:150px;
+}
+.class_a a:link {background-color:#B0C4DE;} /* 未访问链接 */ 
+.class_a a:visited {background-color:#22AA85;} /* 已访问链接 */ 
+.class_a a:hover {background-color:#FF704D;} /* 鼠标移动到链接上 */ 
+.class_a a:active {background-color:#FF704D;} /* 鼠标点击时
+
+</style>
+</head>
+
+<body style="background-color:black;" >
+<div style="background-color:rgb(0,0,0);height:55px;color:black">
+<p></p>
+<img src='static/logo2.png'>
+<div id="id_div_welcome">
+<p>Welcome, {{ gUsername }}!</p>
+<p id="id_p_time"></p>
+
+
+</div>
+
+</div>
+    
+
+
+<script>
+
+
+
+
+function laser_control_g(e)
+{
+    $("#id_laser_g").html(e+"%");
+}
+
+function laser_control_b(e)
+{
+    $("#id_laser_b").html(e+"%");
+}
+var url_file="data.json";
+ // 会打开一个空白页下载，然后空白页消失，用户体验不好
+        function download1() {
+            window.open(url_file);
+        }
+      
+        // 直接下载，用户体验好
+        function download2() {
+            var $form = $('<form method="GET"></form>');
+            $form.attr('action', url_file);
+            $form.appendTo($('body'));
+            $form.submit();
+        }
+function download3()
+{
+	var getcmd = "OK";
+$.ajax({
+    type:'GET',
+    url:'/download',
+    data:{'getcmd':getcmd.toString()},
+    //dataType:'json',
+    timeout:3000,
+    cache:false,
+    async:true,
+    beforeSend:function(){
+    },
+    success:function(data){
+        if(data != null)
+        {   
+            console.log("ajax post:data="+data.toString());
+        }
+    },
+    error:function(msg){
+        document.getElementById('id_div_client').innerHTML = "network error or no Response";
+    }
+	});
+
+}
+
+</script>
+
+
+
+
+<div id="tabs">
+
+  <ul>
+    <li><a href="#BasControl"><span>System Status</span></a></li>
+    <li><a href="#id_tabs_LaserControl"><span>Laser Control</span></a></li>
+    <li><a href="#id_tabs_service">Service</a></li>
+    <li><a href="#id_tabs_about">About</a></li>
+    <li id="id_li_cmd"><a href="#id_tabs_command">Command</a></li>
+  </ul>
+<div id="BasControl" style="color:white">
+<pre>
+Welcome!
+This is log server system.
+</pre>
+</div>
+<div id="id_tabs_LaserControl" style="color:red">
+</div>
+<div id="id_tabs_about" style="color:red">
+	<div hidden>
+©1995-2004 Macromedia, Inc. All rights reserved.
+©2004 Microsoft Corporation. All rights reserved.
+Copyright © 2004 Adobe Systems Incorporated. All rights reserved.
+©1995-2004 Eric A. and Kathryn S. Meyer. All Rights Reserved. 
+
+--------------------- 
+	</div>
+
+<table id="id_table_about" style="align:center">
+</table>
+
+</div>
+
+<div id="id_tabs_service" > 
+<table >
+	<tr hidden>
+		<td id="" class="f_title">LOG</td>
+		<td>
+<div class="class_a">
+			<a hidden class="class_a" href='{{ url_for('download_log', filename='static/logs/frontier.log')}}'>Open</a>
+    		<a class="class_a" href="/static/logs/frontier.log" download="">Download</a>
+</div>
+		</td>
+	</tr>
+      <tr>
+        <td class="section_break" colspan="2"></td>
+      </tr>
+      <tr>
+        <td class="section_break" colspan="2"></td>
+      </tr>
+	<tr>
+		<td class="f_title">UPDATE </td>
+		<td>
+        <div>
+            <form hidden method="post" action="/upload_update_zip" enctype="multipart/form-data">
+            <input type="file" size="10" name="update_zip" value="1.Choose File" accept="zip"/>
+            <br>
+            <input hidden type="text" value="jude" class="txt_input" name="name" style="margin-top:15px;"/>
+            <input type="submit" value="Update" class="button-new" style="margin-top:5px;width:100px"/>
+            </form>
+	<div>
+        <form id="uploadForm" enctype="multipart/form-data" >
+            <div hidden>
+               1. <input id="uploadfile" type="file" name="file" value="" style="color:white" onchange=""><br><br>
+                  <div id="box"> </div>
+               2. <input type="button" value="Upgrade" id="upFileBtn" ><br><br>
+            </div>
+            <div>
+               <input id="chooselog" type="file" name="logname" value="" style="color:white" onchange=""><br><br>
+               <input type="button" value="UploadLog" id="UploadLog" ><br><br>
+               
+            </div>
+        </form>
+	</div>
+
+        </div>
+
+		</td>
+	</tr>
+
+</table>
+</div><!--div id="id_tabs_service"--> 
+
+
+
+
+<div id="AdvControl">
+
+<div id="id_div_client">        </div>
+
+
+
+
+
+
+
+
+</div><!--div id="AdvControl"-->
+</div><!--div id="tabs"-->
+
+</body>
+</html>

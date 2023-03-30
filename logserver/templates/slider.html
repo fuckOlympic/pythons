@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--doctype html-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery UI 滑块（Slider） - 颜色选择器</title>
+  <!--link rel="stylesheet" href="static/jquery-ui-min-v1.10.4.css">
+  <script src="static/jquery-3.3.1.js"></script>
+  <script src="static/jquery-ui-v1.12.1.js"></script-->
+
+  <script src="static/jquery-3.3.1.js"></script>
+  <script src="static/jquery-ui-1.12.1.base/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="static/jquery-ui-1.12.1.base/jquery-ui.min.css">
+
+<!--script
+  src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
+  integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
+  crossorigin="anonymous"></script-->
+  <!--link rel="stylesheet" href="jqueryui/style.css"-->
+  <style>
+  #red, #green, #blue {
+    float: left;
+    clear: left;
+    width: 60px;
+    margin: 30px;
+  }
+  #swatch {
+    width: 120px;
+    height: 150px;
+    margin-top: 18px;
+    margin-left: 350px;
+    background-image: none;
+  }
+  #red .ui-slider-range { /*background: white/*#ef2929*/;
+
+background: -webkit-linear-gradient(top,red,yellow,green);
+ }
+  #red .ui-slider-handle { border-color: #ef2929;  width:65px;height:5px;}
+  #green .ui-slider-range { background: #8ae234; }
+  #green .ui-slider-handle { border-color: #8ae234;width:65px;height:1px; }
+  #blue .ui-slider-range { background: #729fcf; }
+  #blue .ui-slider-handle { border-color: #729fcf; width:65px;height:0px; }
+
+#id_linear{
+width: 50px;
+height:200px;
+/*background: -webkit-linear-gradient(top,white,lightblue,skyblue);*/
+background: -webkit-linear-gradient(top,red,yellow,green);
+margin-top:  118px;
+margin-left: 350px;
+
+
+}
+
+  </style>
+  <script>
+  function hexFromRGB(r, g, b) {
+    var hex = [
+      r.toString( 16 ),
+      g.toString( 16 ),
+      b.toString( 16 )
+    ];
+    $.each( hex, function( nr, val ) {
+      if ( val.length === 1 ) {
+        hex[ nr ] = "0" + val;
+      }
+    });
+    return hex.join( "" ).toUpperCase();
+  }
+  function refreshSwatch() {
+    var red = $( "#red" ).slider( "value" ),
+      green = $( "#green" ).slider( "value" ),
+      blue = $( "#blue" ).slider( "value" ),
+      hex = hexFromRGB( red, green, blue );
+    $( "#swatch" ).css( "background-color", "#" + hex );
+  }
+  $(function() {
+    $( "#red, #green, #blue" ).slider({
+  //    orientation: "horizontal",
+      orientation: "vertical",
+      range: "min",
+      max: 255,
+//      values: [ 17, 200 ],
+	  value: 127,
+      slide: refreshSwatch,
+      change: refreshSwatch
+    });
+    $( "#red" ).slider( "value", 255 );
+    $( "#green" ).slider( "value", 140 );
+    $( "#blue" ).slider( "value", 60 );
+  });
+  </script>
+</head>
+<body class="ui-widget-content" style="border:0;">
+ 
+<p class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
+  <span class="ui-icon ui-icon-pencil" style="float:left; margin:-2px 5px 0 0;"></span>
+  简单的颜色选择器
+</p>
+ 
+<div id="red"></div>
+<div id="green"></div>
+<div id="blue"></div>
+ 
+<div id="swatch" class="ui-widget-content ui-corner-all"></div>
+ 
+<div id="id_linear" ></div> 
+</body>
+</html>
