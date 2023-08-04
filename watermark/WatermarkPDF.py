@@ -1,6 +1,6 @@
 #
 #2023-3-1 "March fixed by Jude F."
-#
+#2023-8-4 "August fiexed and add getdate()  by Jude F."
 #
 #
 #######################################################
@@ -17,7 +17,7 @@ from PyQt5.QtWidgets import QApplication, QCompleter, QWidget
 
 monthList = [
 "January", "Febrary", "March", "April", "May", "June",
-"July", "Augest",  "September", "October", "November", "December"
+"July", "August",  "September", "October", "November", "December"
 ]
 
 yearSelect = 0
@@ -39,6 +39,7 @@ class Ui_cipconsolelog(object):
         self.calendarWidget.setGeometry(QtCore.QRect(10, 0, 312, 183))
         self.calendarWidget.setObjectName("calendarWidget")
         self.calendarWidget.selectionChanged.connect(self.getDate)
+        self.getDate()
         
         self.pushButton = QtWidgets.QPushButton(Dialog)
         self.pushButton.setGeometry(QtCore.QRect(120, 200, 89, 25))
@@ -58,12 +59,14 @@ class Ui_cipconsolelog(object):
         self.date = self.date.split('(')[1]
         self.date = self.date.split(')')[0]
         self.date = self.date.split(',')
+        #print(self.date)
         self.year  = self.date[0]
-        self.month = self.date[1].strip()
-        #self.day   = int(self.date[2])
+        self.month = self.date[1].strip()#strip()---delete space
+        self.day   = self.date[2].strip()#strip()---delete space
         #monthRange = calendar.monthrange(self.date[0], self.date[1])
         self.path = (self.year)+ '-' + (self.month)
-        print(self.path)
+        self.getday = (self.year)+ '-' + (self.month) + '-' + (self.day)
+        print(self.getday)
         
     def create_pdf(self, year, month):
         monthRange = calendar.monthrange(int(year), int(month))[1]
@@ -77,7 +80,7 @@ class Ui_cipconsolelog(object):
     def onButtonClick(self):
         mkdir(self.path)
         self.create_pdf(self.year, self.month)
-        print("Click")
+        print("Complete")
        
             
 
@@ -94,9 +97,11 @@ def release_pdf(day, year, month):
     pdf.set_font('Arial', '', 20)
     pdf.cell(200,10,'DOCUMENT CONTROL', ln=1, align='C')
 
-    pdf.set_font('Arial', '', 36)
+    pdf.cell(200,10,'', ln=1, align='C')
+    
+    #pdf.set_font('Arial', '', 36)
     pdf.cell(200,10, monthString+' '+day+', '+str(year), align='C')
-
+    
     pdf.output(year+'-'+month+'/'+"RELEASED"+'-'+str(year)+'-'+monthString+ '-'+day +'.pdf')
     #print(year+'-'+month+'/'+"RELEASED"+'-'+str(year)+'-'+monthString+ '-'+day +'.pdf')
 
@@ -149,7 +154,7 @@ def mkdir(path):
         # 如果不存在则创建目录
          # 创建目录操作函数
         os.makedirs(path)
-        print(path + ' 创建成功')
+        print(path + ' mkdir OK')
         return True
     else:
         # 如果目录存在则不创建，并提示目录已存在
