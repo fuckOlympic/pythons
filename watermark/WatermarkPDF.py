@@ -16,7 +16,7 @@ from PyQt5.QtGui import QIcon, QIntValidator, QRegExpValidator
 from PyQt5.QtWidgets import QApplication, QCompleter, QWidget
 
 monthList = [
-"January", "Febrary", "March", "April", "May", "June",
+"January", "February", "March", "April", "May", "June",
 "July", "August",  "September", "October", "November", "December"
 ]
 

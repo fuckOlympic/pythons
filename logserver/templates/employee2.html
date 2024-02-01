@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入Vue.js -->
+    <!--script type="text/javascript" src="js/vue.js"></script-->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="../static/jquery-3.3.1.js"></script>
+
+    <script src="https://cdn.sheetjs.com/xlsx-0.19.1/package/dist/xlsx.full.min.js"></script>
+
+    <link href="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.css" rel="stylesheet">
+    <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.js"></script>
+
+    <style>
+
+        .el-table thead {
+            color: #000;
+        }
+        .el-table th.el-table__cell {
+            background-color: #e4e7ed;
+        }
+    </style>
+</head>
+<body>
+
+
+<div id="container">
+    <!-- 引入组件模板 -->
+    <template>
+        <input type="file" @change="onFileChange">
+
+        <div>
+            <el-form :inline="true" :model="searchForm">
+                <el-form-item label="Keyword">
+                    <el-input v-model="searchForm.keyword" placeholder="Keyword" clearable></el-input>
+                </el-form-item>
+                <!--<el-form-item label="Business BU">-->
+                    <!--<el-input v-model="searchForm.bu" placeholder="Business BU"></el-input>-->
+                <!--</el-form-item>-->
+                <el-form-item>
+                    <el-button type="primary" @click="onSearch">查询</el-button>
+                </el-form-item>
+            </el-form>
+
+        </div>
+
+        <div style="padding: 16px">
+            <el-table :data="tableData" style="width: 100%" id="id_el-table" :stripe="true" :border="true">
+                <el-table-column v-for="item in headers" :prop="item" :label="item" width="">
+
+                </el-table-column>
+
+                <!--<el-table-column prop="stuNum" label="学号" width=""></el-table-column>-->
+                <!--<el-table-column prop="stuName" label="姓名" width=""></el-table-column>-->
+                <!--<el-table-column prop="address" label="地址"></el-table-column>-->
+            </el-table>
+        </div>
+    </template>
+</div>
+
+<script type="text/javascript" src="../static/js/excel.js"></script>
+<script>
+    function download() {
+        const workbook = XLSX.utils.book_new(); // 新建工作簿
+
+        const worksheet = XLSX.utils.aoa_to_sheet([[22, 333]]); // 从二维数组新建工作表
+
+        XLSX.utils.sheet_add_aoa(worksheet, [["Naisu"]], { origin: 'C2' }); // 向单元格写数据
+        XLSX.utils.sheet_add_aoa(worksheet, [[233]], { origin: 'A3' }); // 向单元格写数据
+
+        worksheet["!merges"] = [XLSX.utils.decode_range("B3:D4")]; // 合并单元格
+
+        XLSX.utils.book_append_sheet(workbook, worksheet, "sheet1"); // 将工作表添加到工作簿
+
+        XLSX.writeFileXLSX(workbook, 'myfile.xlsx'); // 将工作簿数据建立为./xlsx文件（浏览器环境下会直接下载）
+    }
+
+
+
+</script>
+<!--
+async uploadFile({ file }) {
+    var reader = new FileReader();
+    reader.onload = e => {
+    const data = e.target.result;
+    /**@name cellStyles需开启才有样式数据 */
+    const workbook = XLSX.read(data, { type: 'binary', cellStyles: true });
+    /**@name 所有工作表数组 */
+    const sheets = workbook.Sheets;
+    /**@name 所有工作表名数组 */
+    const sheetNames = workbook.SheetNames;
+    sheetNames.forEach(sheetName => {
+    /**@name 取得当前工作表 */
+    const sheet = sheets[sheetName];
+    /**@name 列样式数据 */
+    const colWidthArray = sheet['!cols'];
+    /**@name 行样式数据 */
+    const rowHeightArray = sheet['!rows'];
+    /**@name 存在单元格合并 */
+    const merges = sheet['!merges'];
+    /**@name 所有单元格范围 */
+    const allCell = sheet['!ref'];
+    };
+    reader.readAsBinaryString(file);
+}-->
+
+<script>
+        //对象中 t 表示数据类型（ s 表示字符串、 n 表示数值……）， v 为原始数据， w 为格式化后的文本……。更多内容可以参考下面链接：
+        //https://docs.sheetjs.com/docs/csf/cell/
+        // 从文件数据中解析出excel内容
+
+
+        $("#id_el-table").append("1234567890");
+
+        var worksheet;
+        var range;
+        function parse(data) {
+            const workbook = XLSX.read(data); // 从原始数据获取工作簿
+                                              // 后端使用可以使用 readFile() 方法直接读取文件
+
+            var first_sheet_name = workbook.SheetNames[0]; // 获得第一个工作表名称
+
+            worksheet = workbook.Sheets[first_sheet_name]; // 获取工作表
+
+            console.log(worksheet['B2']); // 读取并打印A1端元格数据
+            console.log(worksheet['B3']);
+            console.log(worksheet['C3']);
+            console.log(worksheet['D3'].v);
+            if(worksheet['H2'] == undefined)
+                console.log("worksheet['H2']== undefined");
+
+            const merges = worksheet['!merges']
+            console.log(merges); // 打印所有合并单元格信息数组
+            console.log("'!cols'="+worksheet['!cols']);
+            var ak4 = worksheet['!ref'].split(':')[1]
+            console.log(worksheet['!ref']); // 打印输出当前工作表使用的范围
+            console.log(ak4);
+
+            //单元格转化方法（由A1转化成{c:C, r:R}，c为行，r为列）encode_cell / decode_cell
+            const cell = XLSX.utils.decode_cell(ak4);
+            console.log(cell)
+            console.log(cell.c)
+            console.log(cell.r)
+
+            //let jsaddr = XLSX.utils.decode_cell("B2"); // 得到{r:1, c:0}
+
+            //let rawaddr = XLSX.utils.encode_cell({r:1, c:0}); // 得到A2
+
+            let jsaddrr = XLSX.utils.decode_range(worksheet['!ref']); // 得到{ s: { c: 0, r: 0 }, e: { c: 3, r: 2 } }
+            //let rawaddrr = XLSX.utils.encode_range({ s: { c: 0, r: 0 }, e: { c: 3, r: 2 } }); // 得到A1:D3
+
+            console.log("range="+jsaddrr)
+            $("#id_output").html(worksheet['B2'].v);
+
+            //encode_range / decode_range（如A3:B7 互相转化 {s:{c:0, r:2}, e:{c:1, r:6}}）
+            range = XLSX.utils.decode_range(worksheet['!ref'])
+            console.log("(s--e)="+range)
+
+            //（2）遍历单元格范围（range={s:{c:C, r:R}, e:{c:C, r:R}} ）
+
+            //<el-table-column prop="stuNum" label="学号" width=""></el-table-column>  id_el-table
+            table_head_set();
+            table_body_set();
+        }
+
+        function table_search(){
+            for(var R = range.s.r; R <= range.e.r; ++R) {
+                for(var C = range.s.c; C <= range.e.c; ++C) {
+                    var cell_address = {c:C, r:R};
+                    /* if an A1-style address is needed, encode the address */
+                    var cell_ref = XLSX.utils.encode_cell(cell_address);
+                    if(typeof(worksheet[cell_ref]) != "undefined" ){//已解决 excel表格内的数据是空的这里就会报错，这个判断不起作用
+                        //console.log(cell_ref +"="+worksheet[cell_ref].w+"-typeof="+typeof(worksheet[cell_ref].w)  )
+                        //worksheet[cell_ref].w   //把取到的数据放入表格
+                    }
+                }
+            }
+        }
+
+        function table_body_set(){
+            var table_b;
+            for(var R = range.s.r+1; R <= range.e.r; ++R) {
+                for(var C = range.s.c; C <= range.e.c; ++C) {
+                    var cell_address = {c:C, r:R};
+                    var cell_head = {c:C, r:0};
+                    /* if an A1-style address is needed, encode the address */
+                    var cell_ref = XLSX.utils.encode_cell(cell_address);
+                    var cell_h = XLSX.utils.encode_cell(cell_head);
+                    console.log(cell_h);
+                    if(typeof(worksheet[cell_ref]) == "undefined" ){
+                        value = '';
+                    }else{
+                        value = worksheet[cell_ref].w
+                    }
+                    table_b = table_b + '<td>'+ value + '</td>';
+                }
+                table_b = '<tr>' + table_b +'</tr>';
+            }
+            $("#id_tb_body").html(table_b);
+        }
+
+
+        function table_head_set(){
+            var table_h;
+            var value;
+            for(var C = range.s.c; C <= range.e.c; ++C) {
+                var cell_address = {c:C, r:0};
+                var cell_ref = XLSX.utils.encode_cell(cell_address);
+                //table_h = '<el-table-column prop="'+ cell_ref +'" label="'+ worksheet[cell_ref].w  + '" width=""></el-table-column>'
+                //table_h = worksheet[cell_ref].w
+                //console.log(table_h);
+                //$("#id_el-table").append(table_h);
+
+                if(typeof(worksheet[cell_ref]) == "undefined" ){//把取到的数据放入表格
+                    value = '';
+                }else{
+                    value = worksheet[cell_ref].w
+                }
+                table_h = table_h + '<th>'+ value + '</th>';
+            }
+            table_h = '<tr>'+table_h + '</tr>';
+            $("#id_tb_head").html(table_h);
+
+        }
+
+        // 读取文件数据
+        function read(file) {
+            console.log("2", file)
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                parse(e.target.result);
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+
+
+</script>
+
+<button hidden onclick="download()">下载</button>
+
+<br>
+<input type="file" onchange="read(this.files[0])"/><br>
+<div id="id_output">
+
+
+</div>
+<table id="id_tb" border=1>
+    <tr id="id_tb_head"></tr>
+    <tr id="id_tb_body"></tr>
+
+</table>
+<table id="id_tb_body" border=1>
+
+
+</table>
+</body>
+</html>
+
+
+
+
