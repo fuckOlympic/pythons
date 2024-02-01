@@ -27,13 +27,17 @@ exit()
 #print ("your password is %s" %pswd)
 #exit()
 if True:
+    '''
     pswd = getpass.getpass("Please input your password:")
     if pswd == "2023":
         print("Welcome!")
     else:
         print("You failed!")
         exit()
-else:
+    '''
+    pass
+
+else: 
     pswd = getpass.getpass("Please input your verifycode:")
     if verify(secretKey, pswd) == True:
         print("Welcome")
@@ -93,13 +97,14 @@ except:
 '''    
 uid = '(UID "Factory" "F@c70ryS3771ng$D0n3H3r3")'
 fct = '(FCT+0003 "100000002" "CP2411-RBe" "A" "2023-04-03")'
-
-print('(UID "Factory" <p>) sending...')
+clearhours = "(DGN 99)"
+print('(UID "Factory" "!@#$%^&*") sending...')
 client.sendall(uid.encode(encoding="utf-8")) 
-time.sleep(1)
-print("FCT sending...")
-client.sendall(fct.encode(encoding="utf-8")) 
-print("FCT complete...")
+
+time.sleep(2)
+print("DGN sending...")
+client.sendall(clearhours.encode(encoding="utf-8")) 
+
 
 '''
 try:
@@ -132,9 +137,13 @@ else:
     print("Maybe failed...")
 '''
 #recvflag = False
-    
+   
 #client.close()   #关闭连接 
-input()
+
+print("Finished...")
+
+
+#input()
 
 
 
