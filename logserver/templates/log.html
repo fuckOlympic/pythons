@@ -2,19 +2,39 @@
 <!-- PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"-->
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Christie Laser Cinema</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Christie Laser Cinema</title>
 
-  <!--LINK rel="stylesheet" type="text/css" href="static/common.css" /-->
-  <script src="static/jquery-3.3.1.js"></script>
-  <script src="static/jquery-ui-1.12.1.base/jquery-ui.js"></script>
-  <script src="static/spark-md5.js" type="text/javascript"></script>
-  <link rel="stylesheet" href="static/jquery-ui-1.12.1.base/jquery-ui.css">
-  <link rel="stylesheet" href="static/ipinput.css">
+    <!--LINK rel="stylesheet" type="text/css" href="static/common.css" /-->
+    <script src="static/jquery-3.3.1.js"></script>
+    <script src="static/jquery-ui-1.12.1.base/jquery-ui.js"></script>
+    <script src="static/spark-md5.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="static/jquery-ui-1.12.1.base/jquery-ui.css">
+    <link rel="stylesheet" href="static/ipinput.css">
+
+    <script src="static/xlsx.full.min.js"></script>
+    <!-- 引入Vue.js -->
+    <script src="static/vue-2.6.14.js"></script>
+    <!-- 引入 element ui -->
+    <link rel="stylesheet" href="static/element-ui.css">
+    <script src="static/element-ui.js"></script>
 
 
 
-<style type="text/css"> 
+    <style>
+
+        .el-table thead {
+            color: #000;
+        }
+        .el-table th.el-table__cell {
+            background-color: #e4e7ed;
+        }
+        .el-table .el-table__cell{
+            color: #000;
+        }
+    </style>
+
+    <style type="text/css">
 #id_but_savejson{
 width:60px;
 height:30px;
@@ -46,10 +66,11 @@ font-size:20px;
 background:dimgray;
 
 }
-</style> 
+
+    </style>
 
 
-<style type="text/css">
+    <style type="text/css">
 select{
     font-family: verdana,arial,sans-serif;
     font-size:12px;
@@ -113,10 +134,11 @@ width:300px;
 body{
     display : none;
 }
-</style>
+
+    </style>
 
 
-<script type="text/javascript">
+    <script type="text/javascript">
 document.onreadystatechange = function () {
     if (document.readyState == "complete") {
         document.body.style.display = "block";
@@ -148,7 +170,7 @@ $(document).ready(function(){
 		$("#id_table_cmd").show();
 	}
 	$( "#tabs" ).tabs({
-		active: 0,
+		active: 5,
 		activate: function( event, ui ) {
 			var tabs_active = $( "#tabs" ).tabs( "option", "active" );
 			//console.log("tabs_act="+tabs_active);
@@ -308,9 +330,9 @@ function socket_read(getcmd)
 
 
 
-</script>
+    </script>
 
-<style>
+    <style>
 #id_div_welcome{
 float:	right;
 color:	white; 
@@ -328,22 +350,22 @@ width:150px;
 .class_a a:hover {background-color:#FF704D;} /* 鼠标移动到链接上 */ 
 .class_a a:active {background-color:#FF704D;} /* 鼠标点击时
 
-</style>
+
+    </style>
 </head>
 
-<body style="background-color:black;" >
+<body style="background-color:black;">
 <div style="background-color:rgb(0,0,0);height:55px;color:black">
-<p></p>
-<img src='static/logo2.png'>
-<div id="id_div_welcome">
-<p>Welcome, {{ gUsername }}!</p>
-<p id="id_p_time"></p>
+    <p></p>
+    <img src='static/logo2.png'>
+    <div id="id_div_welcome">
+        <p>Welcome, {{ gUsername }}!</p>
+        <p id="id_p_time"></p>
 
+
+    </div>
 
 </div>
-
-</div>
-    
 
 
 <script>
@@ -399,108 +421,138 @@ $.ajax({
 
 }
 
+
+
+
 </script>
-
-
 
 
 <div id="tabs">
 
-  <ul>
-    <li><a href="#BasControl"><span>System Status</span></a></li>
-    <li><a href="#id_tabs_LaserControl"><span>Laser Control</span></a></li>
-    <li><a href="#id_tabs_service">Service</a></li>
-    <li><a href="#id_tabs_about">About</a></li>
-    <li id="id_li_cmd"><a href="#id_tabs_command">Command</a></li>
-  </ul>
-<div id="BasControl" style="color:white">
+    <ul>
+        <li><a href="#BasControl"><span>System Status</span></a></li>
+        <li><a href="#id_tabs_LaserControl"><span>Laser Control</span></a></li>
+        <li><a href="#id_tabs_service">Service</a></li>
+        <li><a href="#id_tabs_about">About</a></li>
+        <li id="id_li_cmd"><a href="#id_tabs_command">Command</a></li>
+        <li><a href="#id_tabs_employee">Employee</a></li>
+    </ul>
+    <div id="BasControl" style="color:white">
 <pre>
 Welcome!
 This is log server system.
 </pre>
-</div>
-<div id="id_tabs_LaserControl" style="color:red">
-</div>
-<div id="id_tabs_about" style="color:red">
-	<div hidden>
-©1995-2004 Macromedia, Inc. All rights reserved.
-©2004 Microsoft Corporation. All rights reserved.
-Copyright © 2004 Adobe Systems Incorporated. All rights reserved.
-©1995-2004 Eric A. and Kathryn S. Meyer. All Rights Reserved. 
+    </div>
+    <div id="id_tabs_LaserControl" style="color:red">
+    </div>
+    <div id="id_tabs_about" style="color:red">
+        <div hidden>
+            ©1995-2004 Macromedia, Inc. All rights reserved.
+            ©2004 Microsoft Corporation. All rights reserved.
+            Copyright © 2004 Adobe Systems Incorporated. All rights reserved.
+            ©1995-2004 Eric A. and Kathryn S. Meyer. All Rights Reserved.
 
---------------------- 
-	</div>
-
-<table id="id_table_about" style="align:center">
-</table>
-
-</div>
-
-<div id="id_tabs_service" > 
-<table >
-	<tr hidden>
-		<td id="" class="f_title">LOG</td>
-		<td>
-<div class="class_a">
-			<a hidden class="class_a" href='{{ url_for('download_log', filename='static/logs/frontier.log')}}'>Open</a>
-    		<a class="class_a" href="/static/logs/frontier.log" download="">Download</a>
-</div>
-		</td>
-	</tr>
-      <tr>
-        <td class="section_break" colspan="2"></td>
-      </tr>
-      <tr>
-        <td class="section_break" colspan="2"></td>
-      </tr>
-	<tr>
-		<td class="f_title">UPDATE </td>
-		<td>
-        <div>
-            <form hidden method="post" action="/upload_update_zip" enctype="multipart/form-data">
-            <input type="file" size="10" name="update_zip" value="1.Choose File" accept="zip"/>
-            <br>
-            <input hidden type="text" value="jude" class="txt_input" name="name" style="margin-top:15px;"/>
-            <input type="submit" value="Update" class="button-new" style="margin-top:5px;width:100px"/>
-            </form>
-	<div>
-        <form id="uploadForm" enctype="multipart/form-data" >
-            <div hidden>
-               1. <input id="uploadfile" type="file" name="file" value="" style="color:white" onchange=""><br><br>
-                  <div id="box"> </div>
-               2. <input type="button" value="Upgrade" id="upFileBtn" ><br><br>
-            </div>
-            <div>
-               <input id="chooselog" type="file" name="logname" value="" style="color:white" onchange=""><br><br>
-               <input type="button" value="UploadLog" id="UploadLog" ><br><br>
-               
-            </div>
-        </form>
-	</div>
-
+            ---------------------
         </div>
 
-		</td>
-	</tr>
+        <table id="id_table_about" style="align:center">
+        </table>
 
-</table>
-</div><!--div id="id_tabs_service"--> 
+    </div>
+
+    <div id="id_tabs_employee" style="color:red">
+        <!--<div>-->
+            <!--<form id="uploadForm" enctype="multipart/form-data">-->
+                <!--<div>-->
+                    <!--<input id="id_choosexlsx" type="file" name="name_xlsx" value="" style="color:white" onchange=""-->
+                           <!--accept=".xlsx, .xls, .csv"><br><br>-->
+                    <!--<input id="id_input" type="" placeholder="input your need">-->
+                    <!--<input id="id_search" type="button" value="Search" onclick=""><br><br>-->
+
+                <!--</div>-->
+            <!--</form>-->
+        <!--</div>-->
 
 
+        <!--<div id="id_output">-->
 
 
-<div id="AdvControl">
-
-<div id="id_div_client">        </div>
+        <!--</div>-->
 
 
+        <!--   上传文件的按钮和表格展示容器---- accept 限制上传文件类型-->
+
+        <!-- 导入文件渲染到这里 -->
+
+        <!--input type="file" id="inputFile"  accept=".xlsx, .xls, .csv" /-->
+
+        <!--<div id="TableContainer"></div>-->
+
+        {% include 'employee.html' %}
+
+    </div>
 
 
+    <div id="id_tabs_service">
+        <table>
+            <tr hidden>
+                <td id="fTitle" class="f_title">LOG</td>
+                <td>
+                    <div class="class_a">
+                        <a hidden class="class_a" href="{{ url_for('download_log', filename='static/logs/frontier.log')}}">Open</a>
+                        <a class="class_a" href="/static/logs/frontier.log" download="">Download</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="section_break" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="section_break" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="f_title">UPDATE</td>
+                <td>
+                    <div>
+                        <form hidden method="post" action="/upload_update_zip" enctype="multipart/form-data">
+                            <input type="file" size="10" name="update_zip" value="1.Choose File" accept="zip"/>
+                            <br>
+                            <input hidden type="text" value="jude" class="txt_input" name="name"
+                                   style="margin-top:15px;"/>
+                            <input type="submit" value="Update" class="button-new" style="margin-top:5px;width:100px"/>
+                        </form>
+                        <div>
+                            <form id="uploadForm" enctype="multipart/form-data">
+                                <div hidden>
+                                    1. <input id="uploadfile" type="file" name="file" value="" style="color:white"
+                                              onchange=""><br><br>
+                                    <div id="box"></div>
+                                    2. <input type="button" value="Upgrade" id="upFileBtn"><br><br>
+                                </div>
+                                <div>
+                                    <input id="chooselog" type="file" name="logname" value="" style="color:white"
+                                           onchange=""><br><br>
+                                    <input type="button" value="UploadLog" id="UploadLog"><br><br>
+
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+
+                </td>
+            </tr>
+
+        </table>
+    </div><!--div id="id_tabs_service"-->
 
 
+    <div id="AdvControl">
+
+        <div id="id_div_client"></div>
 
 
-</div><!--div id="AdvControl"-->
+    </div><!--div id="AdvControl"-->
 </div><!--div id="tabs"-->
 
 </body>

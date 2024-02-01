@@ -17,7 +17,6 @@ global gPassword
 # socket.setdefaulttimeout(timeout)
 
 
-
 app = Flask(__name__)
 
 
@@ -58,29 +57,33 @@ def profile(username):
 @app.route('/')
 @app.route('/<name>')
 def indexx(name=None):
-    #return redirect(url_for('login'))
-    #return render_template("index.html", gUsername="testname")
+    # return redirect(url_for('login'))
+    # return render_template("index.html", gUsername="testname")
     return redirect(url_for('log_page'))
-
 
 
 @app.route('/log')
 def log_page(gUsername=None):
     username = getpass.getuser()
     return render_template("log.html", gUsername=username)
+
+
 '''
 @app.route('/main', methods=['POST'])
 def main_page():
     return render_template("main.html", error='*Wrong username or password!')
 '''
 
+
 @app.route('/signin', methods=['GET'])
 def signin_form(error):
     return render_template("user.html", error=error)
 
+
 @app.route('/login', methods=['GET'])
 def login(error=''):
     return render_template("user.html", error=error)
+
 
 @app.route('/login', methods=['POST'])
 def signin(name=None):
@@ -101,10 +104,9 @@ def signin(name=None):
     return render_template("user.html", error='*Wrong username or password!')
 
 
-
 @app.route('/<filename>')
 def download_log(filename):
-    return None
+    return ""
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -121,6 +123,7 @@ def upload_update_zip():
     print('upload has been successed by ' + username)
     #    return render_template('main.html')
     return build_response(200, None, None)
+
 
 def build_response(code, msg, data):
     res = {
@@ -151,7 +154,7 @@ def up_file():
 
         filename = file.filename
         flist = filename.split('_')
-        fmd5 = flist[len(flist)-1].split('.')[0]
+        fmd5 = flist[len(flist) - 1].split('.')[0]
         if len(fmd5) != 32:
             return "Upgrade failed: Invalid file md5."
         unzippath = "/opt/frontier/run/"
@@ -161,7 +164,7 @@ def up_file():
             file.save(savepath)
         except:
             return "Error:Save file failed!"
-        #smd5 = GetFileMd5(savepath)
+        # smd5 = GetFileMd5(savepath)
         smd5 = CalcMD5(savepath)
         if fmd5 == smd5:
             un_zip(savepath, unzippath)
@@ -169,20 +172,21 @@ def up_file():
         else:
             os.remove(savepath)
             return "Upgrade failed: Invalid check md5."
-            
+
+
 @app.route('/upload_log', methods=['GET', 'POST'])
 def upload_log():
     if request.method == "POST":
         file = request.files['logname']
-        print (str(file))
+        print(str(file))
         filename = file.filename
-        print (os.getcwd())
+        print(os.getcwd())
         log_dir = "log/"
         log_path = Path(log_dir)
         if log_path.is_dir():
             pass
         else:
-            print ("Create path log/ ")
+            print("Create path log/ ")
             os.mkdir(log_dir)
         filename = log_dir + filename
         '''
@@ -193,17 +197,15 @@ def upload_log():
             os.remove(filePath)
             print ("log file is exist, remove it.")'''
         try:
-            #file.save(filePath)
+            # file.save(filePath)
             file.save(filename)
         except:
             return "Error:Save log failed!"
         return "Upload success!"
-            
+
 
 if __name__ == "__main__":
     #    t = threading.Thread(name="seriali-"+COM232,target=serial_for_ip,daemon=False)
     #    t.start()
     print('web server start!!!')
-    app.run(host="0.0.0.0", port=80, debug=True)
-
-
+    app.run(host="0.0.0.0", port=5000, debug=True)

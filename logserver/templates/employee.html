@@ -1,0 +1,40 @@
+<div id="container">
+    <!-- 引入组件模板 -->
+    <template>
+        <input type="file" @change="onFileChange"><br><br>
+
+        <div>
+            <el-form :inline="true" :model="searchForm">
+                <el-form-item label="">
+                    <el-input v-model="searchForm.keyword" placeholder="Search" clearable></el-input>
+                </el-form-item>
+                <!--<el-form-item label="Business BU">-->
+                <!--<el-input v-model="searchForm.bu" placeholder="Business BU"></el-input>-->
+                <!--</el-form-item>-->
+                <el-form-item>
+                    <el-button type="primary" @click="onSearch">查询</el-button>
+                </el-form-item>
+            </el-form>
+
+        </div>
+
+        <div style="padding: 0px">
+            <el-table :data="tableData" style="width: 100%" id="id_el-table" :stripe="true" :border="true">
+                <el-table-column v-for="item in headers" :prop="item" :label="item" width="">
+
+                </el-table-column>
+
+                <!--<el-table-column prop="stuNum" label="学号" width=""></el-table-column>-->
+                <!--<el-table-column prop="stuName" label="姓名" width=""></el-table-column>-->
+                <!--<el-table-column prop="address" label="地址"></el-table-column>-->
+            </el-table>
+        </div>
+    </template>
+</div>
+
+<script type="text/javascript" src="/static/js/excel.js"></script>
+
+
+
+
+

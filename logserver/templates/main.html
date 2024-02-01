@@ -1096,10 +1096,10 @@ function uploadDisable(TorF)
 <div id="id_tabs_service"> 
 <table>
 	<tr>
-		<td id="" class="f_title">LOG</td>
+		<td id="logTile" class="f_title">LOG</td>
 		<td>
 <div class="class_a">
-			<a hidden class="class_a" href='{{ url_for('download_log', filename='static/logs/frontier.log')}}'>Open</a>
+			<a hidden class="class_a" href="{{ url_for('download_log', filename='static/logs/frontier.log')}}">Open</a>
     		<a class="class_a" href="/static/logs/frontier.log" download="">Download</a>
 </div>
 		</td>
